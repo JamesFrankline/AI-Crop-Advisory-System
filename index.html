@@ -152,7 +152,23 @@
 
                 <h3>Suggested crop for the selected land</h3>
 
-                <p>Paddy</p>
+                <p id="dashboardCrop">Paddy</p>
+                <span id="dashboardCropScore">Suitability: --%</span>
+                <div class="dashboard-location">
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <div>
+                        <span>Farm Location</span>
+                        <strong id="dashboardLocation">Nagapattinam</strong>
+                    </div>
+                </div>
+
+                    <div class="dashboard-updated">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="dashboardUpdated">Last updated: --</span>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -389,6 +405,145 @@
 
 </section>
 
+<!-- ================= WEATHER SECTION ================= -->
+
+<section class="weather-section" id="weather">
+
+    <div class="section-heading">
+
+        <p class="section-tag">
+            🌤️ WEATHER UPDATES
+        </p>
+
+        <h2>
+            Weather for Your <span>Farm</span>
+        </h2>
+
+        <p>
+            Check weather conditions and get useful information
+            for better farming decisions.
+        </p>
+
+    </div>
+
+
+    <div class="weather-card">
+
+        <!-- Location -->
+
+        <div class="weather-location">
+
+            <i class="fa-solid fa-location-dot"></i>
+
+            <div>
+                <span>Selected Location</span>
+
+                <h3 id="weatherLocation">
+                    Nagapattinam
+                </h3>
+            </div>
+
+        </div>
+
+
+        <!-- Main Weather -->
+
+        <div class="weather-main">
+
+            <div class="weather-icon">
+
+                <i class="fa-solid fa-sun"></i>
+
+            </div>
+
+            <div>
+
+                <h2 id="weatherTemperature">
+                    30°C
+                </h2>
+
+                <p id="weatherCondition">
+                    Sunny
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Weather Details -->
+
+        <div class="weather-details">
+
+            <div class="weather-detail">
+
+                <i class="fa-solid fa-droplet"></i>
+
+                <span>Humidity</span>
+
+                <strong id="weatherHumidity">
+                    68%
+                </strong>
+
+            </div>
+
+
+            <div class="weather-detail">
+
+                <i class="fa-solid fa-wind"></i>
+
+                <span>Wind Speed</span>
+
+                <strong id="weatherWind">
+                    12 km/h
+                </strong>
+
+            </div>
+
+
+            <div class="weather-detail">
+
+                <i class="fa-solid fa-cloud-rain"></i>
+
+                <span>Rain Chance</span>
+
+                <strong id="weatherRain">
+                    20%
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Farming Advice -->
+
+        <div class="weather-advice">
+
+            <i class="fa-solid fa-seedling"></i>
+
+            <div>
+
+                <h3>Farming Advice</h3>
+
+                <p id="weatherAdvice">
+                    Suitable weather conditions for normal
+                    farming activities.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="weather-updated">
+            <i class="fa-solid fa-clock"></i>
+            <span id="weatherUpdated">Last updated: Just now</span>
+        </div>
+
+    </div>
+
+</section>
+
 </section>
 
 <!-- ================= HOW IT WORKS SECTION ================= -->
@@ -611,7 +766,7 @@
 
                 </div>
 
-                <h2>65<span>%</span></h2>
+                <h2 id="dashboardMoisture">65<span>%</span></h2>
 
                 <p>
                     Current moisture level
@@ -624,7 +779,7 @@
 
                 <div class="circle-content">
 
-                    <strong>65%</strong>
+                    <strong id="dashboardMoistureCircle">65%</strong>
 
                     <span>Moisture</span>
 
@@ -654,7 +809,7 @@
 
                     <p>Temperature</p>
 
-                    <h3>29°C</h3>
+                    <h3 id="dashboardTemperature">29°C</h3>
 
                 </div>
 
@@ -695,8 +850,7 @@
                 <div>
 
                     <p>Irrigation</p>
-
-                    <h3>Not Required</h3>
+                    <h3 id="dashboardIrrigation">Not Required</h3>
 
                 </div>
 
@@ -904,11 +1058,41 @@
                     <input
                         type="number"
                         id="temperature"
-                        placeholder="Enter temperature"
-                    >
+                        placeholder="Enter temperature">
 
                     <span>°C</span>
 
+                </div>
+            </div>
+
+                <div class="form-group">
+                    <label for="nitrogen">Nitrogen (N)</label>
+                    <input type="number" id="nitrogen" placeholder="Enter nitrogen value" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phosphorus">Phosphorus (P)</label>
+                    <input type="number" id="phosphorus" placeholder="Enter phosphorus value" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="potassium">Potassium (K)</label>
+                    <input type="number" id="potassium" placeholder="Enter potassium value" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="humidity">Humidity (%)</label>
+                    <input type="number" id="humidity" placeholder="Enter humidity" min="0" max="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ph">Soil pH</label>
+                    <input type="number" id="ph" placeholder="Enter soil pH" min="0" max="14" step="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rainfall">Rainfall (mm)</label>
+                    <input type="number" id="rainfall" placeholder="Enter rainfall" min="0" required>
                 </div>
 
             </div>
@@ -1016,19 +1200,22 @@
                     Paddy
                 </h2>
 
-                <div class="suitability">
+                <div class="suitability-top">
 
-                    <div class="suitability-top">
+                    <span>
+                        Suitability Score
+                    </span>
 
-                        <span>
-                            Suitability Score
-                        </span>
+                    <strong id="suitabilityScore">
+                        92%
+                    </strong>
 
-                        <strong>
-                            92%
-                        </strong>
+                </div>
 
-                    </div>
+                <div class="ml-confidence">
+                    <span>ML Confidence</span>
+                    <strong id="mlConfidence">--%</strong>
+                </div>
 
                     <div class="progress-bar">
 
@@ -1060,8 +1247,19 @@
 
                 </div>
 
+    <div class="weather-crop-advice">
+        <i class="fa-solid fa-cloud-sun"></i>
 
-                <button class="advisory-btn">
+        <div>
+            <strong>Weather Advisory</strong>
+            <p id="weatherCropAdvice">
+                Weather information will appear here.
+            </p>
+        </div>
+    </div>
+
+
+                <button class="advisory-btn" type="button">
 
                     View Detailed Advisory
 
@@ -1070,6 +1268,102 @@
                 </button>
 
             </div>
+
+            <!-- ================= DETAILED ADVISORY ================= -->
+
+<div class="advisory-modal" id="advisoryModal">
+
+    <div class="advisory-modal-content">
+
+        <div class="advisory-modal-header">
+
+            <div>
+                <p class="section-tag">🌱 CROP ADVISORY</p>
+
+                <h2 id="advisoryCropName">Paddy</h2>
+            </div>
+
+            <button
+                class="close-advisory"
+                id="closeAdvisory"
+                type="button">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="advisory-score">
+
+            <span>Suitability Score</span>
+
+            <strong id="advisoryScore">100%</strong>
+
+        </div>
+
+
+        <div class="advisory-details">
+
+            <div class="advisory-detail">
+
+                <i class="fa-solid fa-temperature-half"></i>
+
+                <div>
+                    <h4>Temperature</h4>
+                    <p id="advisoryTemperature">20–35°C</p>
+                </div>
+
+            </div>
+
+
+            <div class="advisory-detail">
+
+                <i class="fa-solid fa-droplet"></i>
+
+                <div>
+                    <h4>Water Requirement</h4>
+                    <p id="advisoryWater">High</p>
+                </div>
+
+            </div>
+
+
+            <div class="advisory-detail">
+
+                <i class="fa-solid fa-mountain-sun"></i>
+
+                <div>
+                    <h4>Suitable Soil</h4>
+                    <p id="advisorySoil">
+                        Alluvial, Clay, Loamy
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="advisory-detail">
+
+                <i class="fa-solid fa-seedling"></i>
+
+                <div>
+                    <h4>Crop Advisory</h4>
+
+                    <p id="advisoryMessage">
+                        Maintain adequate moisture during
+                        the crop growth period.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>  
 
         </div>
 
