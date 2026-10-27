@@ -117,3 +117,22 @@ matrix = confusion_matrix(
 )
 
 print(matrix)
+
+# ================================
+# SAVE EVALUATION REPORT
+# ================================
+
+with open("model_evaluation_report.txt", "w") as file:
+
+    file.write("CROP RECOMMENDATION MODEL EVALUATION\n")
+    file.write("====================================\n\n")
+
+    file.write(f"Accuracy: {accuracy * 100:.2f}%\n\n")
+
+    file.write("Classification Report:\n")
+
+    file.write(
+        classification_report(y_test, y_pred)
+    )
+
+print("\nEvaluation report saved successfully!")

@@ -72,26 +72,45 @@ def predict():
     # INPUT RANGE VALIDATION
     # ================================
 
-    if not (0 <= N <= 200):
-        return jsonify({"error": "Nitrogen (N) must be between 0 and 200"}), 400
+    if not (0 <= N <= 140):
+        return jsonify({
+            "error": "Nitrogen (N) must be between 0 and 140"
+        }), 400
 
-    if not (0 <= P <= 200):
-        return jsonify({"error": "Phosphorus (P) must be between 0 and 200"}), 400
+    if not (5 <= P <= 145):
+        return jsonify({
+            "error": "Phosphorus (P) must be between 5 and 145"
+        }), 400
 
-    if not (0 <= K <= 250):
-        return jsonify({"error": "Potassium (K) must be between 0 and 250"}), 400
+    if not (5 <= K <= 205):
+        return jsonify({
+            "error": "Potassium (K) must be between 5 and 205"
+        }), 400
 
-    if not (-10 <= temperature <= 60):
-        return jsonify({"error": "Temperature must be between -10 and 60°C"}), 400
+    if not (8.83 <= temperature <= 43.68):
+        return jsonify({
+            "error": "Temperature must be between 8.83 and 43.68°C"
+        }), 400
 
-    if not (0 <= humidity <= 100):
-        return jsonify({"error": "Humidity must be between 0 and 100%"}), 400
+    if not (14.26 <= humidity <= 99.98):
+        return jsonify({
+            "error": "Humidity must be between 14.26 and 99.98%"
+        }), 400
 
-    if not (0 <= ph <= 14):
-        return jsonify({"error": "pH must be between 0 and 14"}), 400
+    if not (3.50 <= ph <= 9.94):
+        return jsonify({
+            "error": "Soil pH must be between 3.50 and 9.94"
+        }), 400
 
-    if not (0 <= rainfall <= 500):
-        return jsonify({"error": "Rainfall must be between 0 and 500 mm"}), 400
+    if not (20.21 <= rainfall <= 298.56):
+        return jsonify({
+            "error": "Rainfall must be between 20.21 and 298.56 mm"
+        }), 400
+
+
+    # ================================
+    # PREPARE MODEL INPUT
+    # ================================
 
     input_data = pd.DataFrame([{
         "N": N,

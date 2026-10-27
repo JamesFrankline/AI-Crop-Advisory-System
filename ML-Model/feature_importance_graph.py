@@ -73,4 +73,10 @@ plt.title(
 
 plt.tight_layout()
 
+plt.savefig(
+    "feature_importance.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
 plt.show()
