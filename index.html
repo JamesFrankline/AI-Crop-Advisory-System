@@ -3,11 +3,13 @@
 
 <head>
 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Character Encoding -->
     <meta charset="UTF-8">
 
     <!-- Responsive Website -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Website Title -->
     <title>AI & IoT Crop Advisory System</title>
@@ -16,152 +18,207 @@
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        
-        <script src="./js/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="./js/script.js" defer></script>
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
 
-    <header>
+    <!-- Login Popup -->
+    <div class="login-modal" id="login-modal">
+        <div class="login-modal-content">
+            <h2>Welcome Back!</h2>
+            <p>Login to your AI Crop Advisor account</p>
 
-        <!-- Logo -->
+            <p>
+                New user?
+                <a href="#" id="show-register">Create Account</a>
+            </p>
 
-        <div class="logo">
 
-            <i class="fa-solid fa-seedling"></i>
+            <form id="login-form">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="Enter your email" required>
 
-            <span>AI Crop Advisor</span>
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" required>
+                <p id="login-message" role="status"></p>
 
+                <button type="submit">Login</button>
+            </form>
+
+            <button type="button" id="close-login">Close</button>
+            <!-- Register Form -->
+            <div id="register-section" style="display: none;">
+                <h2>Create Account</h2>
+                <p>Create your AI Crop Advisor account</p>
+
+                <form id="register-form">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" placeholder="Enter your name" required>
+
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Enter your email" required>
+
+                    <label for="register-password">Password</label>
+
+                    <input type="password" id="register-password" placeholder="At least 8 characters" minlength="8"
+                        required>
+
+                    <p id="register-message" role="status"></p>
+
+                    <button type="submit">Create Account</button>
+
+                </form>
+
+                <button type="button" id="back-to-login">Back to Login</button>
+            </div>
         </div>
-
-        <!-- Navigation Menu -->
-
-        <nav>
-
-            <ul>
-
-                <li><a href="#">Home</a></li>
-
-                <li><a href="#">Dashboard</a></li>
-
-                <li><a href="#">Advisory</a></li>
-
-                <li><a href="#">Live Sensor</a></li>
-
-                <li><a href="#">About</a></li>
-
-            </ul>
-
-        </nav>
-
-        <!-- Login Button -->
-
-        <button class="login-btn">
-
-            Login
-
-        </button>
-
-    </header>
-
-<!-- ================= HERO SECTION ================= -->
-
-<section class="hero">
-
-    <!-- Left Side -->
-
-    <div class="hero-content">
-
-        <p class="tagline">
-            🌱 Smart Farming with AI
-        </p>
-
-        <h1>
-            AI & IoT Based
-            <span>Crop Advisory</span>
-            System
-        </h1>
-
-        <p class="description">
-            Empowering farmers with Artificial Intelligence,
-            IoT sensors and real-time recommendations
-            for better crop productivity.
-        </p>
-
-        <div class="hero-buttons">
-
-            <button class="primary-btn">
-                Get Started
-            </button>
-
-            <button class="secondary-btn">
-                Learn More
-            </button>
-
-        </div>
-
     </div>
 
 
-    <!-- Right Side -->
-
-    <div class="hero-cards">
-
-        <div class="glass-card">
-
-            <i class="fa-solid fa-cloud-sun"></i>
-
-            <div>
-
-                <h3>Today's Weather</h3>
-
-                <p>29°C</p>
-
-            </div>
-
-        </div>
 
 
-        <div class="glass-card">
 
-            <i class="fa-solid fa-droplet"></i>
-
-            <div>
-
-                <h3>Current Soil Moisture</h3>
-
-                <p>65%</p>
-
-            </div>
-
-        </div>
+    <!-- ================= NAVBAR ================= -->
 
 
-        <div class="glass-card">
-
+    <!-- RESPONSIVE NAVBAR -->
+    <header class="site-header">
+        <a href="#home" class="logo" aria-label="AI Crop Advisor Home">
             <i class="fa-solid fa-seedling"></i>
+            <span>AI Crop Advisor</span>
+        </a>
 
-            <div>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu"
+            aria-controls="main-nav" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
 
-                <h3>Suggested crop for the selected land</h3>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#crop-advisory">Advisory</a></li>
+                <li><a href="#live-sensor">Live Sensor</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
 
-                <p id="dashboardCrop">Paddy</p>
-                <span id="dashboardCropScore">Suitability: --%</span>
-                <div class="dashboard-location">
-                    <i class="fa-solid fa-location-dot"></i>
 
-                    <div>
-                        <span>Farm Location</span>
-                        <strong id="dashboardLocation">Nagapattinam</strong>
-                    </div>
+        <div class="nav-auth">
+            <span id="welcome-user" style="display: none; color: white;"></span>
+
+            <button class="login-btn" id="login-btn" type="button">
+                Login
+            </button>
+
+            <button class="logout-btn" id="logout-btn" type="button" style="display: none;">
+                Logout
+            </button>
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= HERO SECTION ================= -->
+
+    <section class="hero" id="home">
+
+        <!-- Left Side -->
+
+        <div class="hero-content">
+
+            <p class="tagline">
+                🌱 Smart Farming with AI
+            </p>
+
+            <h1>
+                AI & IoT Based
+                <span>Crop Advisory</span>
+                System
+            </h1>
+
+            <p class="description">
+                Empowering farmers with Artificial Intelligence,
+                IoT sensors and real-time recommendations
+                for better crop productivity.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="primary-btn" id="get-started-btn">
+                    Get Started
+                </button>
+
+                <button class="secondary-btn">
+                    Learn More
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Right Side -->
+
+        <div class="hero-cards" id="dashboard">
+
+            <div class="glass-card">
+
+                <i class="fa-solid fa-cloud-sun"></i>
+
+                <div>
+
+                    <h3>Today's Weather</h3>
+
+                    <p>29°C</p>
+
                 </div>
+
+            </div>
+
+
+            <div class="glass-card">
+
+                <i class="fa-solid fa-droplet"></i>
+
+                <div>
+
+                    <h3>Current Soil Moisture</h3>
+
+                    <p>65%</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="glass-card">
+
+                <i class="fa-solid fa-seedling"></i>
+
+                <div>
+
+                    <h3>Suggested crop for the selected land</h3>
+
+                    <p id="dashboardCrop">Paddy</p>
+                    <span id="dashboardCropScore">Suitability: --%</span>
+                    <div class="dashboard-location">
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <div>
+                            <span>Farm Location</span>
+                            <strong id="dashboardLocation">Nagapattinam</strong>
+                        </div>
+                    </div>
 
                     <div class="dashboard-updated">
                         <i class="fa-solid fa-clock"></i>
@@ -172,7 +229,7 @@
 
             </div>
 
-        </div>
+
 
 
         <div class="glass-card">
@@ -189,881 +246,821 @@
 
         </div>
 
-    </div>
+        </div>
 
-</section>
-
-
-<!-- ================= FEATURES SECTION ================= -->
-
-<section class="features">
-
-    <!-- Section Heading -->
-
-    <div class="section-heading">
-
-        <p class="section-tag">
-            🌾 SMART AGRICULTURE
-        </p>
-
-        <h2>
-            Everything You Need for
-            <span>Smarter Farming</span>
-        </h2>
-
-        <p>
-            Our AI and IoT system helps farmers make better
-            decisions using real-time data and intelligent advice.
-        </p>
-
-    </div>
+    </section>
 
 
-    <!-- Feature Cards -->
+    <!-- ================= FEATURES SECTION ================= -->
 
-    <div class="feature-grid">
+    <section class="features">
 
+        <!-- Section Heading -->
 
-        <!-- Feature 1 -->
+        <div class="section-heading">
 
-        <div class="feature-card">
-
-            <div class="feature-icon">
-
-                <i class="fa-solid fa-seedling"></i>
-
-            </div>
-
-            <h3>
-                Crop Recommendation
-            </h3>
-
-            <p>
-                Get suitable crop recommendations based on
-                soil conditions, moisture and environmental data.
+            <p class="section-tag">
+                🌾 SMART AGRICULTURE
             </p>
 
-            <a href="#">
-                Explore →
-            </a>
-
-        </div>
-
-
-        <!-- Feature 2 -->
-
-        <div class="feature-card">
-
-            <div class="feature-icon">
-
-                <i class="fa-solid fa-droplet"></i>
-
-            </div>
-
-            <h3>
-                Live Soil Monitoring
-            </h3>
+            <h2>
+                Everything You Need for
+                <span>Smarter Farming</span>
+            </h2>
 
             <p>
-                Monitor soil moisture using IoT sensors
-                and understand when your field needs water.
-            </p>
-
-            <a href="#">
-                View Sensor →
-            </a>
-
-        </div>
-
-
-        <!-- Feature 3 -->
-
-        <div class="feature-card">
-
-            <div class="feature-icon">
-
-                <i class="fa-solid fa-cloud-sun"></i>
-
-            </div>
-
-            <h3>
-                Weather Updates
-            </h3>
-
-            <p>
-                Access weather information to make better
-                decisions about planting and irrigation.
-            </p>
-
-            <a href="#">
-                Check Weather →
-            </a>
-
-        </div>
-
-
-        <!-- Feature 4 -->
-
-        <div class="feature-card">
-
-            <div class="feature-icon">
-
-                <i class="fa-solid fa-flask"></i>
-
-            </div>
-
-            <h3>
-                Fertilizer Advice
-            </h3>
-
-            <p>
-                Receive intelligent fertilizer suggestions
-                according to crop and soil requirements.
-            </p>
-
-            <a href="#">
-                Get Advice →
-            </a>
-
-        </div>
-
-
-        <!-- Feature 5 -->
-
-        <div class="feature-card">
-
-            <div class="feature-icon">
-
-                <i class="fa-solid fa-water"></i>
-
-            </div>
-
-            <h3>
-                Irrigation Guide
-            </h3>
-
-            <p>
-                Know when irrigation is required and reduce
-                unnecessary water usage with smart monitoring.
-            </p>
-
-            <a href="#">
-                View Guide →
-            </a>
-
-        </div>
-
-
-    </div>
-
-    <!-- ================= STATS SECTION ================= -->
-
-    <section class="stats-section">
-
-    <div class="stats-container">
-
-        <!-- Stat 1 -->
-        <div class="stat-item">
-
-            <h2>500+</h2>
-
-            <p>Happy Farmers</p>
-
-        </div>
-
-
-        <!-- Stat 2 -->
-        <div class="stat-item">
-
-            <h2>95%</h2>
-
-            <p>Prediction Accuracy</p>
-
-        </div>
-
-
-        <!-- Stat 3 -->
-        <div class="stat-item">
-
-            <h2>20+</h2>
-
-            <p>Recommended Crops</p>
-
-        </div>
-
-
-        <!-- Stat 4 -->
-        <div class="stat-item">
-
-            <h2>40%</h2>
-
-            <p>Water Saved</p>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ================= WEATHER SECTION ================= -->
-
-<section class="weather-section" id="weather">
-
-    <div class="section-heading">
-
-        <p class="section-tag">
-            🌤️ WEATHER UPDATES
-        </p>
-
-        <h2>
-            Weather for Your <span>Farm</span>
-        </h2>
-
-        <p>
-            Check weather conditions and get useful information
-            for better farming decisions.
-        </p>
-
-    </div>
-
-
-    <div class="weather-card">
-
-        <!-- Location -->
-
-        <div class="weather-location">
-
-            <i class="fa-solid fa-location-dot"></i>
-
-            <div>
-                <span>Selected Location</span>
-
-                <h3 id="weatherLocation">
-                    Nagapattinam
-                </h3>
-            </div>
-
-        </div>
-
-
-        <!-- Main Weather -->
-
-        <div class="weather-main">
-
-            <div class="weather-icon">
-
-                <i class="fa-solid fa-sun"></i>
-
-            </div>
-
-            <div>
-
-                <h2 id="weatherTemperature">
-                    30°C
-                </h2>
-
-                <p id="weatherCondition">
-                    Sunny
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- Weather Details -->
-
-        <div class="weather-details">
-
-            <div class="weather-detail">
-
-                <i class="fa-solid fa-droplet"></i>
-
-                <span>Humidity</span>
-
-                <strong id="weatherHumidity">
-                    68%
-                </strong>
-
-            </div>
-
-
-            <div class="weather-detail">
-
-                <i class="fa-solid fa-wind"></i>
-
-                <span>Wind Speed</span>
-
-                <strong id="weatherWind">
-                    12 km/h
-                </strong>
-
-            </div>
-
-
-            <div class="weather-detail">
-
-                <i class="fa-solid fa-cloud-rain"></i>
-
-                <span>Rain Chance</span>
-
-                <strong id="weatherRain">
-                    20%
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- Farming Advice -->
-
-        <div class="weather-advice">
-
-            <i class="fa-solid fa-seedling"></i>
-
-            <div>
-
-                <h3>Farming Advice</h3>
-
-                <p id="weatherAdvice">
-                    Suitable weather conditions for normal
-                    farming activities.
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="weather-updated">
-            <i class="fa-solid fa-clock"></i>
-            <span id="weatherUpdated">Last updated: Just now</span>
-        </div>
-
-    </div>
-
-</section>
-
-</section>
-
-<!-- ================= HOW IT WORKS SECTION ================= -->
-
-<section class="how-it-works">
-
-    <!-- Section Heading -->
-
-    <div class="section-heading">
-
-        <p class="section-tag">
-            ⚙️ HOW IT WORKS
-        </p>
-
-        <h2>
-            From <span>Field Data</span> to Smart Decisions
-        </h2>
-
-        <p>
-            Our system combines IoT sensor data and Artificial
-            Intelligence to provide practical farming recommendations.
-        </p>
-
-    </div>
-
-
-    <!-- Process Steps -->
-
-    <div class="process-container">
-
-
-        <!-- Step 1 -->
-
-        <div class="process-card">
-
-            <div class="step-number">
-                01
-            </div>
-
-            <div class="process-icon">
-                <i class="fa-solid fa-map-location-dot"></i>
-            </div>
-
-            <h3>
-                Land Details
-            </h3>
-
-            <p>
-                Enter your land information such as soil type,
-                location and available farming conditions.
+                Our AI and IoT system helps farmers make better
+                decisions using real-time data and intelligent advice.
             </p>
 
         </div>
 
 
-        <!-- Arrow -->
+        <!-- Feature Cards -->
 
-        <div class="process-arrow">
-            <i class="fa-solid fa-arrow-right"></i>
-        </div>
+        <div class="feature-grid">
 
 
-        <!-- Step 2 -->
+            <!-- Feature 1 -->
 
-        <div class="process-card">
+            <div class="feature-card">
 
-            <div class="step-number">
-                02
-            </div>
+                <div class="feature-icon">
 
-            <div class="process-icon">
-                <i class="fa-solid fa-satellite-dish"></i>
-            </div>
+                    <i class="fa-solid fa-seedling"></i>
 
-            <h3>
-                IoT Sensor Data
-            </h3>
-
-            <p>
-                Soil moisture and environmental data are
-                collected continuously using IoT sensors.
-            </p>
-
-        </div>
-
-
-        <!-- Arrow -->
-
-        <div class="process-arrow">
-            <i class="fa-solid fa-arrow-right"></i>
-        </div>
-
-
-        <!-- Step 3 -->
-
-        <div class="process-card">
-
-            <div class="step-number">
-                03
-            </div>
-
-            <div class="process-icon">
-                <i class="fa-solid fa-brain"></i>
-            </div>
-
-            <h3>
-                AI Analysis
-            </h3>
-
-            <p>
-                Artificial Intelligence analyzes the collected
-                data and identifies suitable farming decisions.
-            </p>
-
-        </div>
-
-
-        <!-- Arrow -->
-
-        <div class="process-arrow">
-            <i class="fa-solid fa-arrow-right"></i>
-        </div>
-
-
-        <!-- Step 4 -->
-
-        <div class="process-card">
-
-            <div class="step-number">
-                04
-            </div>
-
-            <div class="process-icon">
-                <i class="fa-solid fa-wheat-awn"></i>
-            </div>
-
-            <h3>
-                Crop Recommendation
-            </h3>
-
-            <p>
-                Farmers receive crop, irrigation and fertilizer
-                recommendations based on the analysis.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ================= LIVE SENSOR SECTION ================= -->
-
-<section class="live-sensor">
-
-    <!-- Section Heading -->
-
-    <div class="section-heading">
-
-        <p class="section-tag">
-            📡 LIVE IoT MONITORING
-        </p>
-
-        <h2>
-            Monitor Your <span>Field in Real Time</span>
-        </h2>
-
-        <p>
-            Get real-time information from IoT sensors installed
-            in your agricultural field.
-        </p>
-
-    </div>
-
-
-    <!-- Sensor Dashboard -->
-
-    <div class="sensor-dashboard">
-
-
-        <!-- Dashboard Header -->
-
-        <div class="sensor-header">
-
-            <div>
+                </div>
 
                 <h3>
-                    Field Sensor Dashboard
+                    Crop Recommendation
                 </h3>
 
                 <p>
-                    Real-time environmental data
+                    Get suitable crop recommendations based on
+                    soil conditions, moisture and environmental data.
                 </p>
 
-            </div>
-
-
-            <div class="sensor-status">
-
-                <span class="status-dot"></span>
-
-                <span>Sensor Online</span>
+                <a href="#">
+                    Explore →
+                </a>
 
             </div>
 
-        </div>
 
+            <!-- Feature 2 -->
 
-        <!-- Main Moisture -->
+            <div class="feature-card">
 
-        <div class="moisture-card">
-
-            <div class="moisture-info">
-
-                <div class="sensor-label">
+                <div class="feature-icon">
 
                     <i class="fa-solid fa-droplet"></i>
 
-                    <span>Soil Moisture</span>
-
                 </div>
 
-                <h2 id="dashboardMoisture">65<span>%</span></h2>
+                <h3>
+                    Live Soil Monitoring
+                </h3>
 
                 <p>
-                    Current moisture level
+                    Monitor soil moisture using IoT sensors
+                    and understand when your field needs water.
                 </p>
 
-            </div>
-
-
-            <div class="moisture-circle">
-
-                <div class="circle-content">
-
-                    <strong id="dashboardMoistureCircle">65%</strong>
-
-                    <span>Moisture</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Sensor Data Cards -->
-
-        <div class="sensor-data">
-
-
-            <!-- Temperature -->
-
-            <div class="sensor-data-card">
-
-                <div class="sensor-data-icon">
-
-                    <i class="fa-solid fa-temperature-half"></i>
-
-                </div>
-
-                <div>
-
-                    <p>Temperature</p>
-
-                    <h3 id="dashboardTemperature">29°C</h3>
-
-                </div>
+                <a href="#">
+                    View Sensor →
+                </a>
 
             </div>
 
 
-            <!-- Humidity -->
+            <!-- Feature 3 -->
 
-            <div class="sensor-data-card">
+            <div class="feature-card">
 
-                <div class="sensor-data-icon">
+                <div class="feature-icon">
 
-                    <i class="fa-solid fa-cloud"></i>
-
-                </div>
-
-                <div>
-
-                    <p>Humidity</p>
-
-                    <h3>68%</h3>
+                    <i class="fa-solid fa-cloud-sun"></i>
 
                 </div>
+
+                <h3>
+                    Weather Updates
+                </h3>
+
+                <p>
+                    Access weather information to make better
+                    decisions about planting and irrigation.
+                </p>
+
+                <a href="#">
+                    Check Weather →
+                </a>
 
             </div>
 
 
-            <!-- Irrigation -->
+            <!-- Feature 4 -->
 
-            <div class="sensor-data-card">
+            <div class="feature-card">
 
-                <div class="sensor-data-icon">
+                <div class="feature-icon">
+
+                    <i class="fa-solid fa-flask"></i>
+
+                </div>
+
+                <h3>
+                    Fertilizer Advice
+                </h3>
+
+                <p>
+                    Receive intelligent fertilizer suggestions
+                    according to crop and soil requirements.
+                </p>
+
+                <a href="#">
+                    Get Advice →
+                </a>
+
+            </div>
+
+
+            <!-- Feature 5 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
 
                     <i class="fa-solid fa-water"></i>
 
                 </div>
 
-                <div>
+                <h3>
+                    Irrigation Guide
+                </h3>
 
-                    <p>Irrigation</p>
-                    <h3 id="dashboardIrrigation">Not Required</h3>
+                <p>
+                    Know when irrigation is required and reduce
+                    unnecessary water usage with smart monitoring.
+                </p>
+
+                <a href="#">
+                    View Guide →
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+    <!-- ================= STATS SECTION ================= -->
+
+        <section class="stats-section">
+
+            <div class="stats-container">
+
+                <!-- Stat 1 -->
+                <div class="stat-item">
+
+                    <h2>500+</h2>
+
+                    <p>Happy Farmers</p>
+
+                </div>
+
+
+                <!-- Stat 2 -->
+                <div class="stat-item">
+
+                    <h2>95%</h2>
+
+                    <p>Prediction Accuracy</p>
+
+                </div>
+
+
+                <!-- Stat 3 -->
+                <div class="stat-item">
+
+                    <h2>20+</h2>
+
+                    <p>Recommended Crops</p>
+
+                </div>
+
+
+                <!-- Stat 4 -->
+                <div class="stat-item">
+
+                    <h2>40%</h2>
+
+                    <p>Water Saved</p>
 
                 </div>
 
             </div>
 
+        </section>
 
-            <!-- Sensor Connection -->
+        <!-- ================= WEATHER SECTION ================= -->
 
-            <div class="sensor-data-card">
+        <section class="weather-section" id="weather">
 
-                <div class="sensor-data-icon">
+            <div class="section-heading">
 
-                    <i class="fa-solid fa-wifi"></i>
+                <p class="section-tag">
+                    🌤️ WEATHER UPDATES
+                </p>
+
+                <h2>
+                    Weather for Your <span>Farm</span>
+                </h2>
+
+                <p>
+                    Check weather conditions and get useful information
+                    for better farming decisions.
+                </p>
+
+            </div>
+
+
+            <div class="weather-card">
+
+                <!-- Location -->
+
+                <div class="weather-location">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <div>
+                        <span>Selected Location</span>
+
+                        <h3 id="weatherLocation">
+                            Nagapattinam
+                        </h3>
+                    </div>
 
                 </div>
 
-                <div>
 
-                    <p>Connection</p>
+                <!-- Main Weather -->
 
-                    <h3>Stable</h3>
+                <div class="weather-main">
+
+                    <div class="weather-icon">
+
+                        <i class="fa-solid fa-sun"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 id="weatherTemperature">
+                            30°C
+                        </h2>
+
+                        <p id="weatherCondition">
+                            Sunny
+                        </p>
+
+                    </div>
 
                 </div>
+
+
+                <!-- Weather Details -->
+
+                <div class="weather-details">
+
+                    <div class="weather-detail">
+
+                        <i class="fa-solid fa-droplet"></i>
+
+                        <span>Humidity</span>
+
+                        <strong id="weatherHumidity">
+                            68%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="weather-detail">
+
+                        <i class="fa-solid fa-wind"></i>
+
+                        <span>Wind Speed</span>
+
+                        <strong id="weatherWind">
+                            12 km/h
+                        </strong>
+
+                    </div>
+
+
+                    <div class="weather-detail">
+
+                        <i class="fa-solid fa-cloud-rain"></i>
+
+                        <span>Rain Chance</span>
+
+                        <strong id="weatherRain">
+                            20%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Farming Advice -->
+
+                <div class="weather-advice">
+
+                    <i class="fa-solid fa-seedling"></i>
+
+                    <div>
+
+                        <h3>Farming Advice</h3>
+
+                        <p id="weatherAdvice">
+                            Suitable weather conditions for normal
+                            farming activities.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="weather-updated">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="weatherUpdated">Last updated: Just now</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    <!-- ================= HOW IT WORKS SECTION ================= -->
+
+    <section class="how-it-works" id="about">
+
+        <!-- Section Heading -->
+
+        <div class="section-heading">
+
+            <p class="section-tag">
+                ⚙️ HOW IT WORKS
+            </p>
+
+            <h2>
+                From <span>Field Data</span> to Smart Decisions
+            </h2>
+
+            <p>
+                Our system combines IoT sensor data and Artificial
+                Intelligence to provide practical farming recommendations.
+            </p>
+
+        </div>
+
+
+        <!-- Process Steps -->
+
+        <div class="process-container">
+
+
+            <!-- Step 1 -->
+
+            <div class="process-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <div class="process-icon">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+
+                <h3>
+                    Land Details
+                </h3>
+
+                <p>
+                    Enter your land information such as soil type,
+                    location and available farming conditions.
+                </p>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="process-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+
+            <!-- Step 2 -->
+
+            <div class="process-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <div class="process-icon">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+
+                <h3>
+                    IoT Sensor Data
+                </h3>
+
+                <p>
+                    Soil moisture and environmental data are
+                    collected continuously using IoT sensors.
+                </p>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="process-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+
+            <!-- Step 3 -->
+
+            <div class="process-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <div class="process-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+
+                <h3>
+                    AI Analysis
+                </h3>
+
+                <p>
+                    Artificial Intelligence analyzes the collected
+                    data and identifies suitable farming decisions.
+                </p>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="process-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+
+            <!-- Step 4 -->
+
+            <div class="process-card">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <div class="process-icon">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                </div>
+
+                <h3>
+                    Crop Recommendation
+                </h3>
+
+                <p>
+                    Farmers receive crop, irrigation and fertilizer
+                    recommendations based on the analysis.
+                </p>
 
             </div>
 
         </div>
 
+    </section>
 
-        <!-- Last Updated -->
+    <!-- ================= LIVE SENSOR SECTION ================= -->
 
-        <div class="sensor-footer">
+    <section class="live-sensor" id="live-sensor">
 
-            <span>
-                <i class="fa-regular fa-clock"></i>
-                Last updated: Just now
-            </span>
+        <!-- Section Heading -->
 
-            <span>
-                ESP8266 • Soil Moisture Sensor
-            </span>
+        <div class="section-heading">
+
+            <p class="section-tag">
+                📡 LIVE IoT MONITORING
+            </p>
+
+            <h2>
+                Monitor Your <span>Field in Real Time</span>
+            </h2>
+
+            <p>
+                Get real-time information from IoT sensors installed
+                in your agricultural field.
+            </p>
 
         </div>
 
-    </div>
 
-</section>
+        <!-- Sensor Dashboard -->
 
-<!-- ================= CROP RECOMMENDATION SECTION ================= -->
-
-<section class="crop-recommendation">
-
-    <!-- Section Heading -->
-
-    <div class="section-heading">
-
-        <p class="section-tag">
-            🤖 AI CROP RECOMMENDATION
-        </p>
-
-        <h2>
-            Find the <span>Best Crop</span> for Your Land
-        </h2>
-
-        <p>
-            Enter your field details and our AI system will
-            analyze the conditions to suggest suitable crops.
-        </p>
-
-    </div>
+        <div class="sensor-dashboard">
 
 
-    <!-- Recommendation Container -->
+            <!-- Dashboard Header -->
 
-    <div class="recommendation-container">
-
-
-        <!-- Input Panel -->
-
-        <div class="input-panel">
-
-            <div class="panel-title">
-
-                <div class="panel-icon">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                </div>
+            <div class="sensor-header">
 
                 <div>
 
-                    <h3>Field Information</h3>
+                    <h3>
+                        Field Sensor Dashboard
+                    </h3>
 
-                    <p>Enter your agricultural details</p>
+                    <p>
+                        Real-time environmental data
+                    </p>
+
+                </div>
+
+
+                <div class="sensor-status">
+
+                    <span class="status-dot"></span>
+
+                    <span>Sensor Online</span>
 
                 </div>
 
             </div>
 
 
-            <!-- Land Area -->
+            <!-- Main Moisture -->
 
-            <div class="form-group">
+            <div class="moisture-card">
 
-                <label for="landArea">
-                    <i class="fa-solid fa-ruler-combined"></i>
-                    Land Area
-                </label>
+                <div class="moisture-info">
 
-                <div class="input-with-unit">
+                    <div class="sensor-label">
 
-                    <input
-                        type="number"
-                        id="landArea"
-                        placeholder="Enter land area"
-                        min="0"
-                    >
+                        <i class="fa-solid fa-droplet"></i>
 
-                    <span>acres</span>
+                        <span>Soil Moisture</span>
+
+                    </div>
+
+                    <h2 id="dashboardMoisture">65<span>%</span></h2>
+
+                    <p>
+                        Current moisture level
+                    </p>
+
+                </div>
+
+
+                <div class="moisture-circle">
+
+                    <div class="circle-content">
+
+                        <strong id="dashboardMoistureCircle">65%</strong>
+
+                        <span>Moisture</span>
+
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <!-- Soil Type -->
+            <!-- Sensor Data Cards -->
 
-            <div class="form-group">
-
-                <label for="soilType">
-                    <i class="fa-solid fa-mountain-sun"></i>
-                    Soil Type
-                </label>
-
-                <select id="soilType">
-
-                    <option value="">
-                        Select soil type
-                    </option>
-
-                    <option value="alluvial">
-                        Alluvial Soil
-                    </option>
-
-                    <option value="black">
-                        Black Soil
-                    </option>
-
-                    <option value="red">
-                        Red Soil
-                    </option>
-
-                    <option value="loamy">
-                        Loamy Soil
-                    </option>
-
-                    <option value="sandy">
-                        Sandy Soil
-                    </option>
-
-                    <option value="clay">
-                        Clay Soil
-                    </option>
-
-                </select>
-
-            </div>
+            <div class="sensor-data">
 
 
-            <!-- Soil Moisture -->
+                <!-- Temperature -->
 
-            <div class="form-group">
+                <div class="sensor-data-card">
 
-                <label for="soilMoisture">
-                    <i class="fa-solid fa-droplet"></i>
-                    Soil Moisture
-                </label>
+                    <div class="sensor-data-icon">
 
-                <div class="input-with-unit">
+                        <i class="fa-solid fa-temperature-half"></i>
 
-                    <input
-                        type="number"
-                        id="soilMoisture"
-                        placeholder="Enter moisture"
-                        min="0"
-                        max="100"
-                    >
+                    </div>
 
-                    <span>%</span>
+                    <div>
+
+                        <p>Temperature</p>
+
+                        <h3 id="dashboardTemperature">29°C</h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Humidity -->
+
+                <div class="sensor-data-card">
+
+                    <div class="sensor-data-icon">
+
+                        <i class="fa-solid fa-cloud"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p>Humidity</p>
+
+                        <h3>68%</h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Irrigation -->
+
+                <div class="sensor-data-card">
+
+                    <div class="sensor-data-icon">
+
+                        <i class="fa-solid fa-water"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p>Irrigation</p>
+                        <h3 id="dashboardIrrigation">Not Required</h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Sensor Connection -->
+
+                <div class="sensor-data-card">
+
+                    <div class="sensor-data-icon">
+
+                        <i class="fa-solid fa-wifi"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p>Connection</p>
+
+                        <h3>Stable</h3>
+
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <!-- Temperature -->
+            <!-- Last Updated -->
 
-            <div class="form-group">
+            <div class="sensor-footer">
 
-                <label for="temperature">
-                    <i class="fa-solid fa-temperature-half"></i>
-                    Temperature
-                </label>
+                <span>
+                    <i class="fa-regular fa-clock"></i>
+                    Last updated: Just now
+                </span>
 
-                <div class="input-with-unit">
+                <span>
+                    ESP8266 • Soil Moisture Sensor
+                </span>
 
-                    <input
-                        type="number"
-                        id="temperature"
-                        placeholder="Enter temperature">
-
-                    <span>°C</span>
-
-                </div>
             </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= CROP RECOMMENDATION SECTION ================= -->
+
+    <section class="crop-recommendation" id="crop-advisory">
+
+        <!-- Section Heading -->
+
+        <div class="section-heading">
+
+            <p class="section-tag">
+                🤖 AI CROP RECOMMENDATION
+            </p>
+
+            <h2>
+                Find the <span>Best Crop</span> for Your Land
+            </h2>
+
+            <p>
+                Enter your field details and our AI system will
+                analyze the conditions to suggest suitable crops.
+            </p>
+
+        </div>
+
+
+        <!-- Recommendation Container -->
+
+        <div class="recommendation-container">
+
+
+
+            <!-- Input Panel -->
+
+            <div class="input-panel">
+
+                <div class="panel-title">
+                    <div class="panel-icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <h3>Field Information</h3>
+                        <p>Enter your agricultural details</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="landArea">
+                        <i class="fa-solid fa-ruler-combined"></i> Land Area
+                    </label>
+                    <div class="input-with-unit">
+                        <input type="number" id="landArea" placeholder="Enter land area" min="0" required>
+                        <span>acres</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">
+                        <i class="fa-solid fa-location-dot"></i> Location
+                    </label>
+                    <select id="location" required>
+                        <option value="">Select location</option>
+                        <option value="nagapattinam">Nagapattinam</option>
+                        <option value="thanjavur">Thanjavur</option>
+                        <option value="tiruvarur">Tiruvarur</option>
+                        <option value="mayiladuthurai">Mayiladuthurai</option>
+                        <option value="coimbatore">Coimbatore</option>
+                        <option value="madurai">Madurai</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="soilType">
+                        <i class="fa-solid fa-mountain-sun"></i> Soil Type
+                    </label>
+                    <select id="soilType" required>
+                        <option value="">Select soil type</option>
+                        <option value="alluvial">Alluvial Soil</option>
+                        <option value="black">Black Soil</option>
+                        <option value="red">Red Soil</option>
+                        <option value="loamy">Loamy Soil</option>
+                        <option value="sandy">Sandy Soil</option>
+                        <option value="clay">Clay Soil</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="soilMoisture">
+                        <i class="fa-solid fa-droplet"></i> Soil Moisture
+                    </label>
+                    <div class="input-with-unit">
+                        <input type="number" id="soilMoisture" placeholder="Enter moisture" min="0" max="100" required>
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="temperature">
+                        <i class="fa-solid fa-temperature-half"></i> Temperature
+                    </label>
+                    <div class="input-with-unit">
+                        <input type="number" id="temperature" placeholder="Enter temperature" min="-10" max="60"
+                            required>
+                        <span>°C</span>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="nitrogen">Nitrogen (N)</label>
@@ -1095,127 +1092,72 @@
                     <input type="number" id="rainfall" placeholder="Enter rainfall" min="0" required>
                 </div>
 
-            </div>
-
-
-            <!-- Location -->
-
-            <div class="form-group">
-
-                <label for="location">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Location
-                </label>
-
-                <select id="location">
-
-                    <option value="">
-                        Select location
-                    </option>
-
-                    <option value="nagapattinam">
-                        Nagapattinam
-                    </option>
-
-                    <option value="thanjavur">
-                        Thanjavur
-                    </option>
-
-                    <option value="tiruvarur">
-                        Tiruvarur
-                    </option>
-
-                    <option value="mayiladuthurai">
-                        Mayiladuthurai
-                    </option>
-
-                    <option value="coimbatore">
-                        Coimbatore
-                    </option>
-
-                    <option value="madurai">
-                        Madurai
-                    </option>
-
-                    <option value="other">
-                        Other
-                    </option>
-
-                </select>
+                <button class="recommend-btn" type="button">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Get AI Recommendation
+                </button>
 
             </div>
 
 
-            <!-- Recommendation Button -->
 
-            <button class="recommend-btn" type="button">
+            <!-- AI Result Panel -->
 
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <div class="result-panel">
 
-                Get AI Recommendation
+                <div class="result-header">
 
-            </button>
+                    <div class="result-icon">
 
-        </div>
+                        <i class="fa-solid fa-robot"></i>
 
+                    </div>
 
-        <!-- AI Result Panel -->
+                    <div>
 
-        <div class="result-panel">
+                        <h3>AI Recommendation</h3>
 
-            <div class="result-header">
+                        <p>Based on your field conditions</p>
 
-                <div class="result-icon">
-
-                    <i class="fa-solid fa-robot"></i>
+                    </div>
 
                 </div>
 
-                <div>
 
-                    <h3>AI Recommendation</h3>
+                <!-- Default Result -->
 
-                    <p>Based on your field conditions</p>
+                <div class="result-content">
 
-                </div>
+                    <div class="crop-icon">
 
-            </div>
+                        <i class="fa-solid fa-wheat-awn"></i>
 
+                    </div>
 
-            <!-- Default Result -->
+                    <p class="recommended-label">
+                        RECOMMENDED CROP
+                    </p>
 
-            <div class="result-content">
+                    <h2>
+                        Paddy
+                    </h2>
 
-                <div class="crop-icon">
+                    <div class="suitability-top">
 
-                    <i class="fa-solid fa-wheat-awn"></i>
+                        <span>
+                            Suitability Score
+                        </span>
 
-                </div>
+                        <strong id="suitabilityScore">
+                            92%
+                        </strong>
 
-                <p class="recommended-label">
-                    RECOMMENDED CROP
-                </p>
+                    </div>
 
-                <h2>
-                    Paddy
-                </h2>
-
-                <div class="suitability-top">
-
-                    <span>
-                        Suitability Score
-                    </span>
-
-                    <strong id="suitabilityScore">
-                        92%
-                    </strong>
-
-                </div>
-
-                <div class="ml-confidence">
-                    <span>ML Confidence</span>
-                    <strong id="mlConfidence">--%</strong>
-                </div>
+                    <div class="ml-confidence">
+                        <span>ML Confidence</span>
+                        <strong id="mlConfidence">--%</strong>
+                    </div>
 
                     <div class="progress-bar">
 
@@ -1247,16 +1189,16 @@
 
                 </div>
 
-    <div class="weather-crop-advice">
-        <i class="fa-solid fa-cloud-sun"></i>
+                <div class="weather-crop-advice">
+                    <i class="fa-solid fa-cloud-sun"></i>
 
-        <div>
-            <strong>Weather Advisory</strong>
-            <p id="weatherCropAdvice">
-                Weather information will appear here.
-            </p>
-        </div>
-    </div>
+                    <div>
+                        <strong>Weather Advisory</strong>
+                        <p id="weatherCropAdvice">
+                            Weather information will appear here.
+                        </p>
+                    </div>
+                </div>
 
 
                 <button class="advisory-btn" type="button">
@@ -1269,107 +1211,102 @@
 
             </div>
 
-            <!-- ================= DETAILED ADVISORY ================= -->
-
-<div class="advisory-modal" id="advisoryModal">
-
-    <div class="advisory-modal-content">
-
-        <div class="advisory-modal-header">
-
-            <div>
-                <p class="section-tag">🌱 CROP ADVISORY</p>
-
-                <h2 id="advisoryCropName">Paddy</h2>
-            </div>
-
-            <button
-                class="close-advisory"
-                id="closeAdvisory"
-                type="button">
-
-                <i class="fa-solid fa-xmark"></i>
-
-            </button>
-
         </div>
 
+        <!-- ================= DETAILED ADVISORY ================= -->
 
-        <div class="advisory-score">
+        <div class="advisory-modal" id="advisoryModal">
 
-            <span>Suitability Score</span>
+                <div class="advisory-modal-content">
 
-            <strong id="advisoryScore">100%</strong>
+                    <div class="advisory-modal-header">
 
-        </div>
+                        <div>
+                            <p class="section-tag">🌱 CROP ADVISORY</p>
+
+                            <h2 id="advisoryCropName">Paddy</h2>
+                        </div>
+
+                        <button class="close-advisory" id="closeAdvisory" type="button">
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                        </button>
+
+                    </div>
 
 
-        <div class="advisory-details">
+                    <div class="advisory-score">
 
-            <div class="advisory-detail">
+                        <span>Suitability Score</span>
 
-                <i class="fa-solid fa-temperature-half"></i>
+                        <strong id="advisoryScore">100%</strong>
 
-                <div>
-                    <h4>Temperature</h4>
-                    <p id="advisoryTemperature">20–35°C</p>
+                    </div>
+
+
+                    <div class="advisory-details">
+
+                        <div class="advisory-detail">
+
+                            <i class="fa-solid fa-temperature-half"></i>
+
+                            <div>
+                                <h4>Temperature</h4>
+                                <p id="advisoryTemperature">20–35°C</p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="advisory-detail">
+
+                            <i class="fa-solid fa-droplet"></i>
+
+                            <div>
+                                <h4>Water Requirement</h4>
+                                <p id="advisoryWater">High</p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="advisory-detail">
+
+                            <i class="fa-solid fa-mountain-sun"></i>
+
+                            <div>
+                                <h4>Suitable Soil</h4>
+                                <p id="advisorySoil">
+                                    Alluvial, Clay, Loamy
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="advisory-detail">
+
+                            <i class="fa-solid fa-seedling"></i>
+
+                            <div>
+                                <h4>Crop Advisory</h4>
+
+                                <p id="advisoryMessage">
+                                    Maintain adequate moisture during
+                                    the crop growth period.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
 
-
-            <div class="advisory-detail">
-
-                <i class="fa-solid fa-droplet"></i>
-
-                <div>
-                    <h4>Water Requirement</h4>
-                    <p id="advisoryWater">High</p>
-                </div>
-
-            </div>
-
-
-            <div class="advisory-detail">
-
-                <i class="fa-solid fa-mountain-sun"></i>
-
-                <div>
-                    <h4>Suitable Soil</h4>
-                    <p id="advisorySoil">
-                        Alluvial, Clay, Loamy
-                    </p>
-                </div>
-
-            </div>
-
-
-            <div class="advisory-detail">
-
-                <i class="fa-solid fa-seedling"></i>
-
-                <div>
-                    <h4>Crop Advisory</h4>
-
-                    <p id="advisoryMessage">
-                        Maintain adequate moisture during
-                        the crop growth period.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>  
-
-        </div>
-
-    </div>
-
-</section>
+    </section>
 
 </body>
 
