@@ -1,11 +1,35 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import pandas as pd
 import joblib
-
+import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-CORS(app)
+app.secret_key = "change-this-to-a-long-random-secret"
+
+
+CORS(app, supports_credentials=True)
+
+# ================================
+# USER DATABASE SETUP
+# ================================
+def init_db():
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
 
 
 # Load trained ML model
@@ -240,6 +264,115 @@ def predict():
 def home():
     return "AI Crop Advisory ML API is running!"
 
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json(silent=True) or {}
+
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
+
+    if not name or not email or not password:
+        return jsonify({"error": "All fields are required."}), 400
+
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters."}), 400
+
+    try:
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+            (name, email, generate_password_hash(password))
+        )
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({"message": "Account created successfully!"}), 201
+
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({"error": "This email is already registered."}), 409
+
+    except sqlite3.Error:
+        conn.close()
+        return jsonify({"error": "Database error. Please try again."}), 500
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True) or {}
+
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
+
+    if not email or not password:
+        return jsonify({
+            "error": "Email and password are required."
+        }), 400
+
+    conn = sqlite3.connect("users.db")
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, name, password_hash FROM users WHERE email = ?",
+            (email,)
+        )
+        user = cursor.fetchone()
+
+        if user and check_password_hash(user[2], password):
+            session["user_id"] = user[0]
+            return jsonify({
+                "message": "Login successful!",
+                "name": user[1]
+            }), 200
+
+        return jsonify({
+            "error": "Invalid email or password."
+        }), 401
+
+    finally:
+        conn.close()
+
+
+
+
+@app.route("/check-session", methods=["GET"])
+def check_session():
+    if "user_id" not in session:
+        return jsonify({"logged_in": False}), 401
+
+    conn = sqlite3.connect("users.db")
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT name FROM users WHERE id = ?",
+            (session["user_id"],)
+        )
+        user = cursor.fetchone()
+
+        if user is None:
+            session.clear()
+            return jsonify({"logged_in": False}), 401
+
+        return jsonify({
+            "logged_in": True,
+            "name": user[0]
+        }), 200
+    finally:
+        conn.close()
+
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return jsonify({"message": "Logout successful!"}), 200
+
 
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True)
