@@ -154,9 +154,15 @@ def predict():
 
         prediction = model.predict(input_data)
 
+        print("Predicted crop:", prediction[0])
+        print("Class probabilities:", model.predict_proba(input_data)[0])
+
         probabilities = model.predict_proba(input_data)
 
         confidence = max(probabilities[0]) * 100
+        
+        print("Predicted crop:", prediction[0])
+        print("Class probabilities:", dict(zip(model.classes_, probabilities[0])))
 
         predicted_crop = prediction[0]
 
