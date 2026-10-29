@@ -128,17 +128,11 @@
 
 
 
-    <!-- ================= HERO SECTION ================= -->
 
     <section class="hero" id="home">
 
-        <!-- Left Side -->
-
         <div class="hero-content">
-
-            <p class="tagline">
-                🌱 Smart Farming with AI
-            </p>
+            <p class="tagline">🌱 Smart Farming with AI</p>
 
             <h1>
                 AI & IoT Based
@@ -153,67 +147,43 @@
             </p>
 
             <div class="hero-buttons">
-
-                <button class="primary-btn" id="get-started-btn">
+                <button class="primary-btn" id="get-started-btn" type="button">
                     Get Started
                 </button>
 
-                <button class="secondary-btn">
+                <button class="secondary-btn" type="button">
                     Learn More
                 </button>
-
             </div>
-
         </div>
-
-
-        <!-- Right Side -->
 
         <div class="hero-cards" id="dashboard">
 
             <div class="glass-card">
-
                 <i class="fa-solid fa-cloud-sun"></i>
-
                 <div>
-
                     <h3>Today's Weather</h3>
-
                     <p>29°C</p>
-
                 </div>
-
             </div>
 
-
             <div class="glass-card">
-
                 <i class="fa-solid fa-droplet"></i>
-
                 <div>
-
                     <h3>Current Soil Moisture</h3>
-
                     <p>65%</p>
-
                 </div>
-
             </div>
 
-
-            <div class="glass-card">
-
+            <div class="glass-card crop-summary-card">
                 <i class="fa-solid fa-seedling"></i>
-
                 <div>
-
-                    <h3>Suggested crop for the selected land</h3>
-
+                    <h3>Suggested Crop</h3>
                     <p id="dashboardCrop">Paddy</p>
                     <span id="dashboardCropScore">Suitability: --%</span>
+
                     <div class="dashboard-location">
                         <i class="fa-solid fa-location-dot"></i>
-
                         <div>
                             <span>Farm Location</span>
                             <strong id="dashboardLocation">Nagapattinam</strong>
@@ -224,31 +194,20 @@
                         <i class="fa-solid fa-clock"></i>
                         <span id="dashboardUpdated">Last updated: --</span>
                     </div>
-
                 </div>
-
             </div>
 
-
-
-
-        <div class="glass-card">
-
-            <i class="fa-solid fa-robot"></i>
-
-            <div>
-
-                <h3>Irrigation status</h3>
-
-                <p>Ready</p>
-
+            <div class="glass-card">
+                <i class="fa-solid fa-robot"></i>
+                <div>
+                    <h3>Irrigation Status</h3>
+                    <p>Ready</p>
+                </div>
             </div>
 
         </div>
-
-        </div>
-
     </section>
+
 
 
     <!-- ================= FEATURES SECTION ================= -->
@@ -417,191 +376,191 @@
 
     <!-- ================= STATS SECTION ================= -->
 
-        <section class="stats-section">
+    <section class="stats-section">
 
-            <div class="stats-container">
+        <div class="stats-container">
 
-                <!-- Stat 1 -->
-                <div class="stat-item">
+            <!-- Stat 1 -->
+            <div class="stat-item">
 
-                    <h2>500+</h2>
+                <h2>500+</h2>
 
-                    <p>Happy Farmers</p>
+                <p>Happy Farmers</p>
+
+            </div>
+
+
+            <!-- Stat 2 -->
+            <div class="stat-item">
+
+                <h2>95%</h2>
+
+                <p>Prediction Accuracy</p>
+
+            </div>
+
+
+            <!-- Stat 3 -->
+            <div class="stat-item">
+
+                <h2>20+</h2>
+
+                <p>Recommended Crops</p>
+
+            </div>
+
+
+            <!-- Stat 4 -->
+            <div class="stat-item">
+
+                <h2>40%</h2>
+
+                <p>Water Saved</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= WEATHER SECTION ================= -->
+
+    <section class="weather-section" id="weather">
+
+        <div class="section-heading">
+
+            <p class="section-tag">
+                🌤️ WEATHER UPDATES
+            </p>
+
+            <h2>
+                Weather for Your <span>Farm</span>
+            </h2>
+
+            <p>
+                Check weather conditions and get useful information
+                for better farming decisions.
+            </p>
+
+        </div>
+
+
+        <div class="weather-card">
+
+            <!-- Location -->
+
+            <div class="weather-location">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <div>
+                    <span>Selected Location</span>
+
+                    <h3 id="weatherLocation">
+                        Nagapattinam
+                    </h3>
+                </div>
+
+            </div>
+
+
+            <!-- Main Weather -->
+
+            <div class="weather-main">
+
+                <div class="weather-icon">
+
+                    <i class="fa-solid fa-sun"></i>
 
                 </div>
 
+                <div>
 
-                <!-- Stat 2 -->
-                <div class="stat-item">
+                    <h2 id="weatherTemperature">
+                        30°C
+                    </h2>
 
-                    <h2>95%</h2>
-
-                    <p>Prediction Accuracy</p>
-
-                </div>
-
-
-                <!-- Stat 3 -->
-                <div class="stat-item">
-
-                    <h2>20+</h2>
-
-                    <p>Recommended Crops</p>
-
-                </div>
-
-
-                <!-- Stat 4 -->
-                <div class="stat-item">
-
-                    <h2>40%</h2>
-
-                    <p>Water Saved</p>
+                    <p id="weatherCondition">
+                        Sunny
+                    </p>
 
                 </div>
 
             </div>
 
-        </section>
 
-        <!-- ================= WEATHER SECTION ================= -->
+            <!-- Weather Details -->
 
-        <section class="weather-section" id="weather">
+            <div class="weather-details">
 
-            <div class="section-heading">
+                <div class="weather-detail">
 
-                <p class="section-tag">
-                    🌤️ WEATHER UPDATES
-                </p>
+                    <i class="fa-solid fa-droplet"></i>
 
-                <h2>
-                    Weather for Your <span>Farm</span>
-                </h2>
+                    <span>Humidity</span>
 
-                <p>
-                    Check weather conditions and get useful information
-                    for better farming decisions.
-                </p>
-
-            </div>
-
-
-            <div class="weather-card">
-
-                <!-- Location -->
-
-                <div class="weather-location">
-
-                    <i class="fa-solid fa-location-dot"></i>
-
-                    <div>
-                        <span>Selected Location</span>
-
-                        <h3 id="weatherLocation">
-                            Nagapattinam
-                        </h3>
-                    </div>
+                    <strong id="weatherHumidity">
+                        68%
+                    </strong>
 
                 </div>
 
 
-                <!-- Main Weather -->
+                <div class="weather-detail">
 
-                <div class="weather-main">
+                    <i class="fa-solid fa-wind"></i>
 
-                    <div class="weather-icon">
+                    <span>Wind Speed</span>
 
-                        <i class="fa-solid fa-sun"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2 id="weatherTemperature">
-                            30°C
-                        </h2>
-
-                        <p id="weatherCondition">
-                            Sunny
-                        </p>
-
-                    </div>
+                    <strong id="weatherWind">
+                        12 km/h
+                    </strong>
 
                 </div>
 
 
-                <!-- Weather Details -->
+                <div class="weather-detail">
 
-                <div class="weather-details">
+                    <i class="fa-solid fa-cloud-rain"></i>
 
-                    <div class="weather-detail">
+                    <span>Rain Chance</span>
 
-                        <i class="fa-solid fa-droplet"></i>
+                    <strong id="weatherRain">
+                        20%
+                    </strong>
 
-                        <span>Humidity</span>
-
-                        <strong id="weatherHumidity">
-                            68%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="weather-detail">
-
-                        <i class="fa-solid fa-wind"></i>
-
-                        <span>Wind Speed</span>
-
-                        <strong id="weatherWind">
-                            12 km/h
-                        </strong>
-
-                    </div>
-
-
-                    <div class="weather-detail">
-
-                        <i class="fa-solid fa-cloud-rain"></i>
-
-                        <span>Rain Chance</span>
-
-                        <strong id="weatherRain">
-                            20%
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Farming Advice -->
-
-                <div class="weather-advice">
-
-                    <i class="fa-solid fa-seedling"></i>
-
-                    <div>
-
-                        <h3>Farming Advice</h3>
-
-                        <p id="weatherAdvice">
-                            Suitable weather conditions for normal
-                            farming activities.
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <div class="weather-updated">
-                    <i class="fa-solid fa-clock"></i>
-                    <span id="weatherUpdated">Last updated: Just now</span>
                 </div>
 
             </div>
 
-        </section>
+
+            <!-- Farming Advice -->
+
+            <div class="weather-advice">
+
+                <i class="fa-solid fa-seedling"></i>
+
+                <div>
+
+                    <h3>Farming Advice</h3>
+
+                    <p id="weatherAdvice">
+                        Suitable weather conditions for normal
+                        farming activities.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="weather-updated">
+                <i class="fa-solid fa-clock"></i>
+                <span id="weatherUpdated">Last updated: Just now</span>
+            </div>
+
+        </div>
+
+    </section>
 
     <!-- ================= HOW IT WORKS SECTION ================= -->
 
@@ -1217,87 +1176,85 @@
 
         <div class="advisory-modal" id="advisoryModal">
 
-                <div class="advisory-modal-content">
+            <div class="advisory-modal-content">
 
-                    <div class="advisory-modal-header">
+                <div class="advisory-modal-header">
+
+                    <div>
+                        <p class="section-tag">🌱 CROP ADVISORY</p>
+
+                        <h2 id="advisoryCropName">Paddy</h2>
+                    </div>
+
+                    <button class="close-advisory" id="closeAdvisory" type="button">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="advisory-score">
+
+                    <span>Suitability Score</span>
+
+                    <strong id="advisoryScore">100%</strong>
+
+                </div>
+
+
+                <div class="advisory-details">
+
+                    <div class="advisory-detail">
+
+                        <i class="fa-solid fa-temperature-half"></i>
 
                         <div>
-                            <p class="section-tag">🌱 CROP ADVISORY</p>
-
-                            <h2 id="advisoryCropName">Paddy</h2>
+                            <h4>Temperature</h4>
+                            <p id="advisoryTemperature">20–35°C</p>
                         </div>
-
-                        <button class="close-advisory" id="closeAdvisory" type="button">
-
-                            <i class="fa-solid fa-xmark"></i>
-
-                        </button>
 
                     </div>
 
 
-                    <div class="advisory-score">
+                    <div class="advisory-detail">
 
-                        <span>Suitability Score</span>
+                        <i class="fa-solid fa-droplet"></i>
 
-                        <strong id="advisoryScore">100%</strong>
+                        <div>
+                            <h4>Water Requirement</h4>
+                            <p id="advisoryWater">High</p>
+                        </div>
 
                     </div>
 
 
-                    <div class="advisory-details">
+                    <div class="advisory-detail">
 
-                        <div class="advisory-detail">
+                        <i class="fa-solid fa-mountain-sun"></i>
 
-                            <i class="fa-solid fa-temperature-half"></i>
-
-                            <div>
-                                <h4>Temperature</h4>
-                                <p id="advisoryTemperature">20–35°C</p>
-                            </div>
-
+                        <div>
+                            <h4>Suitable Soil</h4>
+                            <p id="advisorySoil">
+                                Alluvial, Clay, Loamy
+                            </p>
                         </div>
 
-
-                        <div class="advisory-detail">
-
-                            <i class="fa-solid fa-droplet"></i>
-
-                            <div>
-                                <h4>Water Requirement</h4>
-                                <p id="advisoryWater">High</p>
-                            </div>
-
-                        </div>
+                    </div>
 
 
-                        <div class="advisory-detail">
+                    <div class="advisory-detail">
 
-                            <i class="fa-solid fa-mountain-sun"></i>
+                        <i class="fa-solid fa-seedling"></i>
 
-                            <div>
-                                <h4>Suitable Soil</h4>
-                                <p id="advisorySoil">
-                                    Alluvial, Clay, Loamy
-                                </p>
-                            </div>
+                        <div>
+                            <h4>Crop Advisory</h4>
 
-                        </div>
-
-
-                        <div class="advisory-detail">
-
-                            <i class="fa-solid fa-seedling"></i>
-
-                            <div>
-                                <h4>Crop Advisory</h4>
-
-                                <p id="advisoryMessage">
-                                    Maintain adequate moisture during
-                                    the crop growth period.
-                                </p>
-                            </div>
-
+                            <p id="advisoryMessage">
+                                Maintain adequate moisture during
+                                the crop growth period.
+                            </p>
                         </div>
 
                     </div>
@@ -1305,6 +1262,8 @@
                 </div>
 
             </div>
+
+        </div>
 
     </section>
 
