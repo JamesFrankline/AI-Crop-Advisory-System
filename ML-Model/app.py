@@ -1,21 +1,28 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from pathlib import Path
+import os
 import pandas as pd
 import joblib
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
-app.secret_key = "change-this-to-a-long-random-secret"
+BASE_DIR = Path(__file__).resolve().parent
 
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "local-development-only-change-me")
 
 CORS(app, supports_credentials=True)
+
+DATABASE_PATH = BASE_DIR / "users.db"
+MODEL_PATH = BASE_DIR / "crop_model.pkl"
+CSV_PATH = BASE_DIR / "Crop_recommendation.csv"
 
 # ================================
 # USER DATABASE SETUP
 # ================================
 def init_db():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect(str(DATABASE_PATH))
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -33,13 +40,13 @@ def init_db():
 
 
 # Load trained ML model
-model = joblib.load("crop_model.pkl")
+model = joblib.load(MODEL_PATH)
 
 # ================================
 # LOAD TRAINING DATA
 # ================================
 
-training_data = pd.read_csv("Crop_recommendation.csv")
+training_data = pd.read_csv(CSV_PATH)
 
 feature_columns = [
     "N",
@@ -379,6 +386,7 @@ def logout():
     return jsonify({"message": "Logout successful!"}), 200
 
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)
