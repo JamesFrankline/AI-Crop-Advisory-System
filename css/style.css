@@ -2548,3 +2548,255 @@ transform:translateY(-2px);
     font-size: 13px;
     opacity: 0.6;
 }
+
+
+/* =====================================
+   FINAL MOBILE HEADER + HERO FIX
+   Add at the VERY END of style.css
+===================================== */
+
+@media (max-width: 768px) {
+
+    /* Header */
+    .site-header {
+        position: fixed;
+        top: 8px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: none;
+        margin: 0;
+        padding: 10px 12px;
+        min-height: 60px;
+        height: auto;
+        transform: none;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        background: rgba(3, 26, 20, 0.97);
+        z-index: 9999;
+    }
+
+    .site-header .logo {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 15px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .site-header .logo span {
+        display: block;
+        line-height: 1.25;
+    }
+
+    .site-header .menu-toggle {
+        display: flex;
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .site-header .nav-auth {
+        flex: 0 0 auto;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .site-header .nav-auth .login-btn,
+    .site-header .nav-auth .logout-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    /* Mobile dropdown menu */
+    .site-header nav,
+    .site-header nav.is-open {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 8px;
+        background: #06251a;
+        border: 1px solid #14583d;
+        border-radius: 14px;
+        overflow: visible;
+    }
+
+    .site-header nav {
+        display: none;
+    }
+
+    .site-header nav.is-open {
+        display: block;
+    }
+
+    .site-header nav ul {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+    }
+
+    .site-header nav a {
+        display: block;
+        padding: 12px;
+        font-size: 14px;
+        white-space: normal;
+    }
+
+    /* Hero: stack heading above dashboard cards */
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 24px;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        height: auto;
+        padding: 110px 16px 36px;
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        flex: none;
+        margin: 0;
+    }
+
+    .hero .tagline {
+        max-width: 100%;
+        font-size: 13px;
+        padding: 9px 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .hero h1 {
+        width: 100%;
+        max-width: 100%;
+        font-size: clamp(32px, 8.5vw, 44px);
+        line-height: 1.15;
+        overflow-wrap: break-word;
+    }
+
+    .hero .description {
+        width: 100%;
+        max-width: 100%;
+        font-size: 16px;
+        line-height: 1.65;
+        overflow-wrap: break-word;
+    }
+
+    .hero-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .hero-buttons button {
+        max-width: 100%;
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+
+    /* Dashboard cards */
+    .hero-cards {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: stretch;
+        align-content: start;
+        gap: 12px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        flex: none;
+        margin: 0;
+    }
+
+    .hero-cards .glass-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 0;
+        padding: 16px;
+        border-radius: 15px;
+        overflow-wrap: anywhere;
+        background: rgba(5, 39, 29, 0.96);
+    }
+
+    .hero-cards .glass-card > i {
+        flex: 0 0 28px;
+        font-size: 25px;
+    }
+
+    .hero-cards .glass-card > div {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .hero-cards .glass-card h3 {
+        font-size: 15px;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-cards .glass-card p,
+    .hero-cards .glass-card span,
+    .hero-cards .glass-card strong {
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-cards .crop-summary-card {
+        grid-row: auto;
+    }
+}
+
+/* Very narrow phones */
+@media (max-width: 380px) {
+    .site-header {
+        left: 6px;
+        right: 6px;
+        padding: 8px;
+        gap: 5px;
+    }
+
+    .site-header .logo {
+        font-size: 13px;
+    }
+
+    .site-header .menu-toggle {
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .site-header .nav-auth .login-btn,
+    .site-header .nav-auth .logout-btn {
+        padding: 7px 8px;
+        font-size: 11px;
+    }
+
+    .hero {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
