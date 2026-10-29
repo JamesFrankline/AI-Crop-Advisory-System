@@ -2,6 +2,10 @@
 // AI CROP RECOMMENDATION SYSTEM
 // ================================
 
+
+const API_BASE_URL = "https://ai-crop-advisory-system.onrender.com";
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =================================
@@ -321,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
 
             const mlResponse = await fetch(
-                "http://127.0.0.1:5000/predict",
+                "https://ai-crop-advisory-system.onrender.com/predict",
                 {
                     method: "POST",
 
@@ -1330,7 +1334,7 @@ if (loginForm && loginMessage) {
         loginMessage.style.color = "#555";
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/login", {
+            const response = await fetch("https://ai-crop-advisory-system.onrender.com/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -1418,7 +1422,7 @@ if (registerForm && registerMessage) {
         registerMessage.style.color = "#555";
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/register", {
+            const response = await fetch("https://ai-crop-advisory-system.onrender.com/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -1456,7 +1460,7 @@ if (registerForm && registerMessage) {
 if (logoutBtn) {
     logoutBtn.addEventListener("click", async function () {
         try {
-            const response = await fetch("http://127.0.0.1:5000/logout", {
+            const response = await fetch("https://ai-crop-advisory-system.onrender.com/logout", {
                 method: "POST",
                 credentials: "include"
             });
@@ -1493,7 +1497,7 @@ if (logoutBtn) {
 async function checkLoginSession() {
     try {
         const response = await fetch(
-            "http://127.0.0.1:5000/check-session",
+            "https://ai-crop-advisory-system.onrender.com/check-session",
             {
                 method: "GET",
                 credentials: "include"
