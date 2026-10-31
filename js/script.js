@@ -334,13 +334,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
 
                     body: JSON.stringify({
+                        // Existing ML model inputs
                         N: nitrogen,
                         P: phosphorus,
                         K: potassium,
                         temperature: temperature,
                         humidity: humidity,
                         ph: ph,
-                        rainfall: rainfall
+                        rainfall: rainfall,
+
+                        // Additional field inputs
+                        landArea: landArea,
+                        soilType: soilType,
+                        soilMoisture: moisture,
+                        location: location
                     })
                 }
             );
@@ -394,227 +401,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             return;
         }
-
-
-        // ================================
-        // CROP DATA
-        // ================================
-
-        // ================================
-        // CALCULATE CONDITION SCORE
-        // ================================
-
-        function calculateConditionScore(value, min, max) {
-
-            const idealMin = min + (max - min) * 0.25;
-            const idealMax = max - (max - min) * 0.25;
-
-            // Excellent range
-            if (value >= idealMin && value <= idealMax) {
-                return 100;
-            }
-
-            // Acceptable range
-            if (value >= min && value <= max) {
-                return 75;
-            }
-
-            // Outside range
-            return 0;
-        }
-
-        const crops = [
-
-            {
-                name: "Paddy",
-
-                minTemperature: 20,
-                maxTemperature: 35,
-
-                minMoisture: 55,
-                maxMoisture: 90,
-
-                soils: ["alluvial", "clay", "loamy"]
-            },
-
-            {
-                name: "Maize",
-
-                minTemperature: 18,
-                maxTemperature: 32,
-
-                minMoisture: 40,
-                maxMoisture: 70,
-
-                soils: ["loamy", "red"]
-            },
-
-            {
-                name: "Cotton",
-
-                minTemperature: 21,
-                maxTemperature: 35,
-
-                minMoisture: 35,
-                maxMoisture: 60,
-
-                soils: ["black", "red"]
-            },
-
-            {
-                name: "Groundnut",
-
-                minTemperature: 22,
-                maxTemperature: 32,
-
-                minMoisture: 30,
-                maxMoisture: 55,
-
-                soils: ["sandy", "loamy", "red"]
-            },
-
-            {
-                name: "Millet",
-
-                minTemperature: 20,
-                maxTemperature: 35,
-
-                minMoisture: 20,
-                maxMoisture: 50,
-
-                soils: ["sandy", "red", "loamy", "black", "alluvial"]
-            }
-
-        ];
-
-
-        // ================================
-        // FIND BEST CROP
-        // ================================
-
-        let bestCrop = null;
-
-        let highestScore = 0;
-
-        let bestReasons = [];
-
-
-        crops.forEach(function (crop) {
-
-
-            // ================================
-            // SCORE
-            // ================================
-
-            let score = 0;
-
-            let reasons = [];
-
-
-            // ================================
-            // TEMPERATURE SCORE
-            // ================================
-
-            const temperatureScore = calculateConditionScore(
-                temperature,
-                crop.minTemperature,
-                crop.maxTemperature
-            );
-
-            score += temperatureScore * 0.35;
-
-            if (temperatureScore === 100) {
-
-                reasons.push("Ideal temperature");
-
-            }
-            else if (temperatureScore === 75) {
-
-                reasons.push("Suitable temperature");
-
-            }
-
-
-            // ================================
-            // MOISTURE SCORE
-            // ================================
-
-            const moistureScore = calculateConditionScore(
-                moisture,
-                crop.minMoisture,
-                crop.maxMoisture
-            );
-
-            score += moistureScore * 0.35;
-
-            if (moistureScore === 100) {
-
-                reasons.push("Ideal soil moisture");
-
-            }
-            else if (moistureScore === 75) {
-
-                reasons.push("Suitable soil moisture");
-
-            }
-
-
-            // ================================
-            // SOIL SCORE
-            // ================================
-
-            if (crop.soils.includes(soilType)) {
-
-                score += 30;
-
-                reasons.push("Suitable soil condition");
-
-            }
-
-
-            // ================================
-            // CHECK BEST CROP
-            // ================================
-
-            if (score > highestScore) {
-
-                highestScore = Math.round(score);
-
-                bestCrop = crop;
-
-                bestReasons = reasons;
-
-            }
-
-        });
-
-
-        // ================================
-        // DEFAULT RECOMMENDATION
-        // ================================
-
-        if (!bestCrop) {
-
-            bestCrop = crops[crops.length - 1];
-
-            highestScore = 60;
-
-            bestReasons = [
-
-                "Adaptable to different conditions",
-
-                "Lower water requirement",
-
-                "Suitable for varied soil conditions"
-
-            ];
-
-        }
-
-
-        // ================================
-        // UPDATE CROP NAME
-        // ================================
 
         // ================================
         // ML RESULT
@@ -1073,13 +859,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // ================================
 
         console.log(
-            "Recommended Crop:",
-            bestCrop.name
+            "ML Recommended Crop:",
+            mlCrop
         );
 
         console.log(
-            "Suitability Score:",
-            highestScore + "%"
+            "ML Suitability Score:",
+            mlSuitability + "%"
         );
 
 

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from pathlib import Path
+import math
 import os
 import pandas as pd
 import joblib
@@ -76,7 +77,11 @@ def predict():
         "temperature",
         "humidity",
         "ph",
-        "rainfall"
+        "rainfall",
+        "landArea",
+        "location",
+        "soilType",
+        "soilMoisture"
     ]
 
     for field in required_fields:
@@ -93,6 +98,11 @@ def predict():
         humidity = float(data["humidity"])
         ph = float(data["ph"])
         rainfall = float(data["rainfall"])
+        land_area = float(data["landArea"])
+        soil_moisture = float(data["soilMoisture"])
+
+        location = str(data["location"]).strip().lower()
+        soil_type = str(data["soilType"]).strip().lower()
 
     except (TypeError, ValueError):
         return jsonify({
@@ -137,7 +147,46 @@ def predict():
         return jsonify({
             "error": "Rainfall must be between 20.21 and 298.56 mm"
         }), 400
+    
+    
+    # ================================
+    # ADDITIONAL FIELD INPUT VALIDATION
+    # ================================
 
+    if not math.isfinite(land_area) or land_area <= 0:
+        return jsonify({
+            "error": "Land area must be greater than 0 acres"
+        }), 400
+
+    if not math.isfinite(soil_moisture) or not (0 <= soil_moisture <= 100):
+        return jsonify({
+            "error": "Soil moisture must be between 0 and 100%"
+        }), 400
+
+    allowed_soils = [
+        "alluvial", "black", "red",
+        "loamy", "sandy", "clay"
+    ]
+
+    if soil_type not in allowed_soils:
+        return jsonify({
+            "error": "Invalid soil type"
+        }), 400
+
+    allowed_locations = [
+        "nagapattinam",
+        "thanjavur",
+        "tiruvarur",
+        "mayiladuthurai",
+        "coimbatore",
+        "madurai",
+        "other"
+    ]
+
+    if location not in allowed_locations:
+        return jsonify({
+            "error": "Invalid location"
+        }), 400
 
     # ================================
     # PREPARE MODEL INPUT
