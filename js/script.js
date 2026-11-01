@@ -2,8 +2,8 @@
 // AI CROP RECOMMENDATION SYSTEM
 // ================================
 
-
-const API_BASE_URL = "https://ai-crop-advisory-system.onrender.com";
+const IOT_API_URL = "http://127.0.0.1:5000/iot-data";
+const API_BASE_URL = "https://ai-crop-advisory-system-0onl.onrender.com";
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -89,6 +89,161 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector("#dashboardUpdated");
 
     // ================================
+    // LIVE ESP32 SENSOR DATA
+    // ================================
+
+    const dashboardHumidity =
+        document.getElementById("dashboardHumidity");
+
+    const dashboardConnection =
+        document.getElementById("dashboardConnection");
+
+    const sensorStatusDot =
+        document.getElementById("sensorStatusDot");
+
+    const sensorStatusText =
+        document.getElementById("sensorStatusText");
+
+    const sensorLastUpdated =
+        document.getElementById("sensorLastUpdated");
+
+    const heroSoilMoisture =
+        document.getElementById("heroSoilMoisture");
+
+    const heroIrrigation =
+        document.getElementById("heroIrrigation");
+
+
+    async function updateLiveSensorData() {
+
+        try {
+
+            const response = await fetch(IOT_API_URL, {
+                method: "GET",
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Sensor data unavailable");
+            }
+
+            const data = await response.json();
+
+            const temperature = Number(data.temperature);
+            const humidity = Number(data.humidity);
+            const moisture = Number(data.soilMoisture);
+
+            if (
+                !Number.isFinite(temperature) ||
+                !Number.isFinite(humidity) ||
+                !Number.isFinite(moisture)
+            ) {
+                throw new Error("Invalid sensor readings");
+            }
+
+            // Update sensor readings
+
+            if (dashboardTemperature) {
+                dashboardTemperature.textContent =
+                    temperature.toFixed(1) + "°C";
+            }
+
+            if (dashboardHumidity) {
+                dashboardHumidity.textContent =
+                    humidity.toFixed(1) + "%";
+            }
+
+            if (dashboardMoisture) {
+                dashboardMoisture.textContent =
+                    moisture.toFixed(1) + "%";
+            }
+
+            if (dashboardMoistureCircle) {
+                dashboardMoistureCircle.textContent =
+                    moisture.toFixed(1) + "%";
+            }
+
+            if (heroSoilMoisture) {
+                heroSoilMoisture.textContent =
+                    moisture.toFixed(1) + "%";
+            }
+
+            // Irrigation status
+
+            let irrigationStatus = "";
+
+            if (moisture < 30) {
+                irrigationStatus = "Irrigation Required";
+            }
+            else if (moisture < 50) {
+                irrigationStatus = "Irrigation Recommended";
+            }
+            else if (moisture <= 70) {
+                irrigationStatus = "Moisture Normal";
+            }
+            else {
+                irrigationStatus = "High Moisture";
+            }
+
+            if (dashboardIrrigation) {
+                dashboardIrrigation.textContent =
+                    irrigationStatus;
+            }
+
+            if (heroIrrigation) {
+                heroIrrigation.textContent =
+                    irrigationStatus;
+            }
+
+            // Connection status
+
+            if (dashboardConnection) {
+                dashboardConnection.textContent = "Connected";
+            }
+
+            if (sensorStatusText) {
+                sensorStatusText.textContent = "Sensor Online";
+            }
+
+            if (sensorStatusDot) {
+                sensorStatusDot.style.backgroundColor = "#22c55e";
+            }
+
+            // Last updated time
+
+            if (sensorLastUpdated) {
+                sensorLastUpdated.textContent =
+                    "Last updated: " +
+                    new Date().toLocaleTimeString();
+            }
+
+            console.log("Live ESP32 Data:", data);
+
+        }
+        catch (error) {
+
+            console.error("IoT Sensor Error:", error);
+
+            if (dashboardConnection) {
+                dashboardConnection.textContent = "Disconnected";
+            }
+
+            if (sensorStatusText) {
+                sensorStatusText.textContent = "Sensor Offline";
+            }
+
+            if (sensorStatusDot) {
+                sensorStatusDot.style.backgroundColor = "#ef4444";
+            }
+        }
+    }
+
+    // Fetch immediately, then every 3 seconds
+
+    updateLiveSensorData();
+    setInterval(updateLiveSensorData, 3000);
+
+    // ================================
     // DETAILED ADVISORY ELEMENTS
     // ================================
 
@@ -167,10 +322,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // ================================
 
     const cropName =
-        document.querySelector(".result-content h2");
+        document.getElementById("recommendedCropName");
 
     const suitabilityScore =
-        document.querySelector(".suitability-top strong");
+        document.getElementById("suitabilityScore");
+
+    const mlConfidenceElement =
+        document.getElementById("mlConfidence");
 
     const progressFill =
         document.querySelector(".progress-fill");
@@ -323,9 +481,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let mlResult;
 
         try {
-
             const mlResponse = await fetch(
-                "https://ai-crop-advisory-system.onrender.com/predict",
+                `${API_BASE_URL}/predict`,
                 {
                     method: "POST",
 
@@ -410,34 +567,46 @@ document.addEventListener("DOMContentLoaded", function () {
             mlResult.recommended_crop;
 
         const mlConfidence =
-            mlResult.confidence;
+            Number(mlResult.confidence);
 
         const mlSuitability =
-            mlResult.suitability;
+            Number(mlResult.suitability);
 
 
         // UPDATE CROP NAME
 
-        cropName.textContent =
-            mlCrop;
+        if (cropName) {
+            cropName.textContent = mlCrop;
+        }
 
 
         // UPDATE ML CONFIDENCE
 
-        document.getElementById("mlConfidence").textContent =
-            mlConfidence + "%";
+        if (mlConfidenceElement) {
+            mlConfidenceElement.textContent =
+                mlConfidence.toFixed(2) + "%";
+        }
 
 
-        // UPDATE FIELD SUITABILITY
+        // UPDATE SUITABILITY SCORE
 
-        suitabilityScore.textContent =
-            mlSuitability + "%";
+        const safeSuitability =
+            Math.max(0, Math.min(100, mlSuitability));
+
+        if (suitabilityScore) {
+            suitabilityScore.textContent =
+                safeSuitability.toFixed(2) + "%";
+        }
 
 
         // UPDATE PROGRESS BAR
 
-        progressFill.style.width =
-            mlSuitability + "%";
+        if (progressFill) {
+            progressFill.style.width =
+                safeSuitability + "%";
+        }
+
+
 
 
         // ================================
@@ -541,11 +710,98 @@ document.addEventListener("DOMContentLoaded", function () {
         const weather =
             weatherData[location] || weatherData.other;
 
-        const weatherResponse = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${weather.latitude}&longitude=${weather.longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&daily=precipitation_probability_max&timezone=auto`
-        );
+        // ================================
+        // FETCH LIVE WEATHER SAFELY
+        // ================================
 
-        const liveWeather = await weatherResponse.json();
+        let liveWeather;
+
+        try {
+
+            const weatherResponse = await fetch(
+                `https://api.open-meteo.com/v1/forecast?latitude=${weather.latitude}&longitude=${weather.longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&daily=precipitation_probability_max&timezone=auto`
+            );
+
+            if (!weatherResponse.ok) {
+                throw new Error("Weather API request failed.");
+            }
+
+            liveWeather = await weatherResponse.json();
+
+            if (!liveWeather.current || !liveWeather.daily) {
+                throw new Error("Weather data is incomplete.");
+            }
+
+        }
+        catch (error) {
+
+            console.error("Weather API Error:", error);
+
+            // Keep crop recommendation and irrigation results
+            // Display fallback weather information
+
+            if (weatherLocation) {
+                weatherLocation.textContent = weather.name;
+            }
+
+            const weatherTemperature =
+                document.querySelector("#weatherTemperature");
+
+            const weatherCondition =
+                document.querySelector("#weatherCondition");
+
+            const weatherHumidity =
+                document.querySelector("#weatherHumidity");
+
+            const weatherWind =
+                document.querySelector("#weatherWind");
+
+            const weatherRain =
+                document.querySelector("#weatherRain");
+
+            const weatherAdvice =
+                document.querySelector("#weatherAdvice");
+
+            if (weatherTemperature) {
+                weatherTemperature.textContent = "Unavailable";
+            }
+
+            if (weatherCondition) {
+                weatherCondition.textContent = "Weather unavailable";
+            }
+
+            if (weatherHumidity) {
+                weatherHumidity.textContent = "Unavailable";
+            }
+
+            if (weatherWind) {
+                weatherWind.textContent = "Unavailable";
+            }
+
+            if (weatherRain) {
+                weatherRain.textContent = "Unavailable";
+            }
+
+            if (weatherAdvice) {
+                weatherAdvice.textContent =
+                    "Live weather data is temporarily unavailable. Please try again later.";
+            }
+
+            if (weatherCropAdvice) {
+                weatherCropAdvice.textContent =
+                    "Crop recommendation completed. Live weather information is currently unavailable.";
+            }
+
+            const weatherUpdated =
+                document.querySelector("#weatherUpdated");
+
+            if (weatherUpdated) {
+                weatherUpdated.textContent =
+                    "Weather data unavailable";
+            }
+
+            return;
+        }
 
         console.log("Live Weather Data:", liveWeather);
 
@@ -711,19 +967,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
         }
 
-        const weatherIcon = document.querySelector(".weather-icon i");
-
-        if (weather.condition === "Sunny") {
-            weatherIcon.className = "fa-solid fa-sun";
-        } else if (weather.condition === "Partly Cloudy") {
-            weatherIcon.className = "fa-solid fa-cloud-sun";
-        } else if (weather.condition === "Cloudy") {
-            weatherIcon.className = "fa-solid fa-cloud";
-        } else if (weather.condition === "Rainy") {
-            weatherIcon.className = "fa-solid fa-cloud-rain";
-        } else {
-            weatherIcon.className = "fa-solid fa-sun";
-        }
+        // ================================
+        // WEATHER CONDITION AND ICON
+        // ================================
 
         const weatherCode = currentWeather.weather_code;
 
@@ -740,27 +986,70 @@ document.addEventListener("DOMContentLoaded", function () {
             weather.condition = "Rainy";
         }
         else if (weatherCode <= 77) {
+            weather.condition = "Snow";
+        }
+        else if (weatherCode <= 82) {
             weather.condition = "Rainy";
         }
+        else if (weatherCode <= 86) {
+            weather.condition = "Snow";
+        }
         else {
-            weather.condition = "Rainy";
+            weather.condition = "Thunderstorm";
+        }
+
+
+        // UPDATE WEATHER CONDITION TEXT
+
+        const weatherConditionElement =
+            document.querySelector("#weatherCondition");
+
+        if (weatherConditionElement) {
+            weatherConditionElement.textContent =
+                weather.condition;
+        }
+
+
+        // UPDATE WEATHER ICON
+
+        const weatherIcon =
+            document.querySelector(".weather-icon i");
+
+        if (weatherIcon) {
+
+            if (weather.condition === "Sunny") {
+                weatherIcon.className = "fa-solid fa-sun";
+            }
+            else if (weather.condition === "Partly Cloudy") {
+                weatherIcon.className = "fa-solid fa-cloud-sun";
+            }
+            else if (weather.condition === "Cloudy") {
+                weatherIcon.className = "fa-solid fa-cloud";
+            }
+            else if (weather.condition === "Rainy") {
+                weatherIcon.className = "fa-solid fa-cloud-rain";
+            }
+            else if (weather.condition === "Snow") {
+                weatherIcon.className = "fa-solid fa-snowflake";
+            }
+            else {
+                weatherIcon.className = "fa-solid fa-cloud-bolt";
+            }
         }
 
         // ================================
         // IRRIGATION STATUS
         // ================================
 
-        // ================================
 
 
         // SMART IRRIGATION STATUS
         // ================================
 
-        // ================================
-
-
-        // SMART IRRIGATION STATUS
-        // ================================
+        console.log(
+            "ML Prediction:",
+            mlResult
+        );
 
         dashboardIrrigation.classList.remove(
             "irrigation-required",
@@ -769,48 +1058,22 @@ document.addEventListener("DOMContentLoaded", function () {
             "high-moisture"
         );
 
-
         if (moisture < 30) {
-
-            dashboardIrrigation.textContent =
-                "Irrigation Required";
-
-            dashboardIrrigation.classList.add(
-                "irrigation-required"
-            );
-
+            dashboardIrrigation.textContent = "Irrigation Required";
+            dashboardIrrigation.classList.add("irrigation-required");
         }
         else if (moisture < 50) {
-
-            dashboardIrrigation.textContent =
-                "Irrigation Recommended";
-
-            dashboardIrrigation.classList.add(
-                "irrigation-recommended"
-            );
-
+            dashboardIrrigation.textContent = "Irrigation Recommended";
+            dashboardIrrigation.classList.add("irrigation-recommended");
         }
         else if (moisture <= 70) {
-
-            dashboardIrrigation.textContent =
-                "Moisture Normal";
-
-            dashboardIrrigation.classList.add(
-                "moisture-normal"
-            );
-
+            dashboardIrrigation.textContent = "Moisture Normal";
+            dashboardIrrigation.classList.add("moisture-normal");
         }
         else {
-
-            dashboardIrrigation.textContent =
-                "High Moisture";
-
-            dashboardIrrigation.classList.add(
-                "high-moisture"
-            );
-
+            dashboardIrrigation.textContent = "High Moisture";
+            dashboardIrrigation.classList.add("high-moisture");
         }
-
 
         // ================================
         // UPDATE PROGRESS BAR
@@ -1120,7 +1383,7 @@ if (loginForm && loginMessage) {
         loginMessage.style.color = "#555";
 
         try {
-            const response = await fetch("https://ai-crop-advisory-system.onrender.com/login", {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -1208,7 +1471,7 @@ if (registerForm && registerMessage) {
         registerMessage.style.color = "#555";
 
         try {
-            const response = await fetch("https://ai-crop-advisory-system.onrender.com/register", {
+            const response = await fetch(`${API_BASE_URL}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -1246,7 +1509,7 @@ if (registerForm && registerMessage) {
 if (logoutBtn) {
     logoutBtn.addEventListener("click", async function () {
         try {
-            const response = await fetch("https://ai-crop-advisory-system.onrender.com/logout", {
+            const response = await fetch(`${API_BASE_URL}/logout`, {
                 method: "POST",
                 credentials: "include"
             });
@@ -1283,7 +1546,7 @@ if (logoutBtn) {
 async function checkLoginSession() {
     try {
         const response = await fetch(
-            "https://ai-crop-advisory-system.onrender.com/check-session",
+            `${API_BASE_URL}/check-session`,
             {
                 method: "GET",
                 credentials: "include"

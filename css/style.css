@@ -1211,20 +1211,21 @@ strong {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 12px;
+    margin-bottom: 13px;
 }
 
-.suitability-top span,
-.ml-confidence span {
-    color: #e0e8e2;
-    font-size: 12px;
+.suitability-top span {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.suitability-top strong,
-.ml-confidence strong {
+.suitability-top strong {
     color: var(--green);
-    font-size: 15px;
+    font-size: 21px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .progress-bar {
@@ -2400,4 +2401,105 @@ strong {
         padding-left: 12px;
         padding-right: 12px;
     }
+}
+
+/* =====================================
+   IMPROVED AI RECOMMENDATION RESULT
+===================================== */
+
+.result-content {
+    width: 100%;
+    padding: 20px 8px 25px;
+}
+
+.result-content h2 {
+    margin: 8px 0 25px;
+    color: var(--green);
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Suitability Score Card */
+
+.suitability {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(103, 255, 117, 0.2);
+    border-radius: 14px;
+    background: rgba(103, 255, 117, 0.07);
+}
+
+.suitability-top {
+    margin-bottom: 13px;
+}
+
+.suitability-top span {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.suitability-top strong {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+/* Progress Bar */
+
+.progress-bar {
+    width: 100%;
+    height: 9px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: var(--green);
+    transition: width 0.6s ease;
+}
+
+/* ML Confidence Card */
+
+.ml-confidence {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    margin: 0 0 20px;
+    border: 1px solid rgba(103, 255, 117, 0.2);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ml-confidence div {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.ml-confidence i {
+    color: var(--green);
+    font-size: 17px;
+}
+
+.ml-confidence span {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ml-confidence strong {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: 700;
 }

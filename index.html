@@ -171,7 +171,7 @@
                 <i class="fa-solid fa-droplet"></i>
                 <div>
                     <h3>Current Soil Moisture</h3>
-                    <p>65%</p>
+                    <p id="heroSoilMoisture">--%</p>
                 </div>
             </div>
 
@@ -201,7 +201,7 @@
                 <i class="fa-solid fa-robot"></i>
                 <div>
                     <h3>Irrigation Status</h3>
-                    <p>Ready</p>
+                    <p id="heroIrrigation">Waiting...</p>
                 </div>
             </div>
 
@@ -759,9 +759,8 @@
 
                 <div class="sensor-status">
 
-                    <span class="status-dot"></span>
-
-                    <span>Sensor Online</span>
+                    <span class="status-dot" id="sensorStatusDot"></span>
+                    <span id="sensorStatusText">Connecting...</span>
 
                 </div>
 
@@ -846,7 +845,7 @@
 
                         <p>Humidity</p>
 
-                        <h3>68%</h3>
+                        <h3 id="dashboardHumidity">--%</h3>
 
                     </div>
 
@@ -887,7 +886,7 @@
 
                         <p>Connection</p>
 
-                        <h3>Stable</h3>
+                        <h3 id="dashboardConnection">Checking...</h3>
 
                     </div>
 
@@ -902,15 +901,14 @@
 
                 <span>
                     <i class="fa-regular fa-clock"></i>
-                    Last updated: Just now
+                    <span id="sensorLastUpdated">Waiting for sensor data...</span>
                 </span>
 
                 <span>
-                    ESP8266 • Soil Moisture Sensor
+                    ESP32 • DHT22 • Soil Moisture Sensor
                 </span>
 
             </div>
-
         </div>
 
     </section>
@@ -1083,187 +1081,140 @@
                 </div>
 
 
-                <!-- Default Result -->
+                <!-- AI Result Content -->
 
                 <div class="result-content">
 
                     <div class="crop-icon">
-
                         <i class="fa-solid fa-wheat-awn"></i>
-
                     </div>
 
                     <p class="recommended-label">
                         RECOMMENDED CROP
                     </p>
 
-                    <h2>
-                        Paddy
-                    </h2>
+                    <h2 id="recommendedCropName">Paddy</h2>
 
-                    <div class="suitability-top">
+                    <!-- Suitability Score -->
+                    <div class="suitability">
 
-                        <span>
-                            Suitability Score
-                        </span>
+                        <div class="suitability-top">
+                            <span>Suitability Score</span>
+                            <strong id="suitabilityScore">--%</strong>
+                        </div>
 
-                        <strong id="suitabilityScore">
-                            92%
-                        </strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
 
                     </div>
 
+                    <!-- ML Confidence -->
                     <div class="ml-confidence">
-                        <span>ML Confidence</span>
+
+                        <div>
+                            <i class="fa-solid fa-brain"></i>
+                            <span>ML Confidence</span>
+                        </div>
+
                         <strong id="mlConfidence">--%</strong>
-                    </div>
-
-                    <div class="progress-bar">
-
-                        <div class="progress-fill"></div>
 
                     </div>
 
                 </div>
 
+                <!-- ================= DETAILED ADVISORY ================= -->
 
-                <!-- Recommendation Reasons -->
+                <div class="advisory-modal" id="advisoryModal">
 
-                <div class="recommendation-reasons">
+                    <div class="advisory-modal-content">
 
-                    <div>
-                        <i class="fa-solid fa-check"></i>
-                        Suitable soil condition
-                    </div>
+                        <div class="advisory-modal-header">
 
-                    <div>
-                        <i class="fa-solid fa-check"></i>
-                        Good moisture level
-                    </div>
+                            <div>
+                                <p class="section-tag">🌱 CROP ADVISORY</p>
 
-                    <div>
-                        <i class="fa-solid fa-check"></i>
-                        Suitable temperature
-                    </div>
+                                <h2 id="advisoryCropName">Paddy</h2>
+                            </div>
 
-                </div>
+                            <button class="close-advisory" id="closeAdvisory" type="button">
 
-                <div class="weather-crop-advice">
-                    <i class="fa-solid fa-cloud-sun"></i>
+                                <i class="fa-solid fa-xmark"></i>
 
-                    <div>
-                        <strong>Weather Advisory</strong>
-                        <p id="weatherCropAdvice">
-                            Weather information will appear here.
-                        </p>
-                    </div>
-                </div>
+                            </button>
 
-
-                <button class="advisory-btn" type="button">
-
-                    View Detailed Advisory
-
-                    <i class="fa-solid fa-arrow-right"></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- ================= DETAILED ADVISORY ================= -->
-
-        <div class="advisory-modal" id="advisoryModal">
-
-            <div class="advisory-modal-content">
-
-                <div class="advisory-modal-header">
-
-                    <div>
-                        <p class="section-tag">🌱 CROP ADVISORY</p>
-
-                        <h2 id="advisoryCropName">Paddy</h2>
-                    </div>
-
-                    <button class="close-advisory" id="closeAdvisory" type="button">
-
-                        <i class="fa-solid fa-xmark"></i>
-
-                    </button>
-
-                </div>
-
-
-                <div class="advisory-score">
-
-                    <span>Suitability Score</span>
-
-                    <strong id="advisoryScore">100%</strong>
-
-                </div>
-
-
-                <div class="advisory-details">
-
-                    <div class="advisory-detail">
-
-                        <i class="fa-solid fa-temperature-half"></i>
-
-                        <div>
-                            <h4>Temperature</h4>
-                            <p id="advisoryTemperature">20–35°C</p>
                         </div>
 
-                    </div>
 
+                        <div class="advisory-score">
 
-                    <div class="advisory-detail">
+                            <span>Suitability Score</span>
 
-                        <i class="fa-solid fa-droplet"></i>
+                            <strong id="advisoryScore">100%</strong>
 
-                        <div>
-                            <h4>Water Requirement</h4>
-                            <p id="advisoryWater">High</p>
                         </div>
 
-                    </div>
+
+                        <div class="advisory-details">
+
+                            <div class="advisory-detail">
+
+                                <i class="fa-solid fa-temperature-half"></i>
+
+                                <div>
+                                    <h4>Temperature</h4>
+                                    <p id="advisoryTemperature">20–35°C</p>
+                                </div>
+
+                            </div>
 
 
-                    <div class="advisory-detail">
+                            <div class="advisory-detail">
 
-                        <i class="fa-solid fa-mountain-sun"></i>
+                                <i class="fa-solid fa-droplet"></i>
 
-                        <div>
-                            <h4>Suitable Soil</h4>
-                            <p id="advisorySoil">
-                                Alluvial, Clay, Loamy
-                            </p>
-                        </div>
+                                <div>
+                                    <h4>Water Requirement</h4>
+                                    <p id="advisoryWater">High</p>
+                                </div>
 
-                    </div>
+                            </div>
 
 
-                    <div class="advisory-detail">
+                            <div class="advisory-detail">
 
-                        <i class="fa-solid fa-seedling"></i>
+                                <i class="fa-solid fa-mountain-sun"></i>
 
-                        <div>
-                            <h4>Crop Advisory</h4>
+                                <div>
+                                    <h4>Suitable Soil</h4>
+                                    <p id="advisorySoil">
+                                        Alluvial, Clay, Loamy
+                                    </p>
+                                </div>
 
-                            <p id="advisoryMessage">
-                                Maintain adequate moisture during
-                                the crop growth period.
-                            </p>
+                            </div>
+
+
+                            <div class="advisory-detail">
+
+                                <i class="fa-solid fa-seedling"></i>
+
+                                <div>
+                                    <h4>Crop Advisory</h4>
+
+                                    <p id="advisoryMessage">
+                                        Maintain adequate moisture during
+                                        the crop growth period.
+                                    </p>
+                                </div>
+
+                            </div>
+
                         </div>
 
                     </div>
 
                 </div>
-
-            </div>
-
-        </div>
 
     </section>
 

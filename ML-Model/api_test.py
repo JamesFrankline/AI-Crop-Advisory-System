@@ -11,9 +11,10 @@ data = {
     "rainfall": 200
 }
 
+API_BASE_URL = "https://ai-crop-advisory-system-0onl.onrender.com"
 
 response = requests.post(
-    "http://127.0.0.1:5000/predict",
+    f"{API_BASE_URL}/predict",
     json=data
 )
 

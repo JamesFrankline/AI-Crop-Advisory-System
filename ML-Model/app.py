@@ -58,6 +58,40 @@ feature_columns = [
     "ph",
     "rainfall"
 ]
+# ================================
+# API HEALTH CHECK
+# ================================
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "message": "AI Crop Advisory ML API is running!",
+        "status": "online"
+    }), 200
+
+
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "healthy",
+        "message": "AI Crop Advisory API is working"
+    }), 200
+
+
+# ================================
+# GET AVAILABLE CROPS
+# ================================
+
+@app.route("/crops", methods=["GET"])
+def get_crops():
+    crops = sorted(
+        training_data["label"].dropna().unique().tolist()
+    )
+
+    return jsonify({
+        "total_crops": len(crops),
+        "crops": crops
+    }), 200
 
 
 @app.route("/predict", methods=["POST"])
@@ -322,8 +356,77 @@ def predict():
         }), 500
 
 
-@app.route("/")
-def home():
+# ================================
+# IOT SENSOR DATA
+# ================================
+
+latest_iot_data = {}
+
+
+@app.route("/iot-data", methods=["POST"])
+def receive_iot_data():
+
+    global latest_iot_data
+
+    data = request.get_json(silent=True)
+
+    if not data:
+        return jsonify({"error": "No sensor data received"}), 400
+
+    try:
+        temperature = float(data["temperature"])
+        humidity = float(data["humidity"])
+        soil_moisture = float(data["soilMoisture"])
+        soil_raw = int(data["soilRaw"])
+
+        values = [
+            temperature,
+            humidity,
+            soil_moisture
+        ]
+
+        if not all(math.isfinite(value) for value in values):
+            raise ValueError("Invalid sensor values")
+
+        if not (-40 <= temperature <= 80):
+            raise ValueError("Invalid temperature")
+
+        if not (0 <= humidity <= 100):
+            raise ValueError("Invalid humidity")
+
+        if not (0 <= soil_moisture <= 100):
+            raise ValueError("Invalid soil moisture")
+
+        if not (0 <= soil_raw <= 4095):
+            raise ValueError("Invalid soil raw value")
+
+    except (KeyError, TypeError, ValueError):
+        return jsonify({"error": "Invalid sensor data"}), 400
+
+    latest_iot_data = {
+        "temperature": temperature,
+        "humidity": humidity,
+        "soilMoisture": soil_moisture,
+        "soilRaw": soil_raw
+    }
+
+    print("Received IoT Data:", latest_iot_data)
+
+    return jsonify({
+        "message": "IoT data received successfully",
+        "sensor_data": latest_iot_data
+    }), 200
+
+
+@app.route("/iot-data", methods=["GET"])
+def get_iot_data():
+
+    if not latest_iot_data:
+        return jsonify({
+            "message": "No IoT data available"
+        }), 404
+
+    return jsonify(latest_iot_data), 200 
     return "AI Crop Advisory ML API is running!"
 
 @app.route("/register", methods=["POST"])
@@ -438,4 +541,4 @@ def logout():
 init_db()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
