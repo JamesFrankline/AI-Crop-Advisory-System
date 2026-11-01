@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from pathlib import Path
@@ -6,46 +7,94 @@ import os
 import pandas as pd
 import joblib
 import sqlite3
+import psycopg2
+
+from psycopg2 import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
+# =====================================
+# APPLICATION CONFIGURATION
+# =====================================
 
 BASE_DIR = Path(__file__).resolve().parent
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "local-development-only-change-me")
-
-CORS(app, supports_credentials=True)
 
 DATABASE_PATH = BASE_DIR / "users.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 MODEL_PATH = BASE_DIR / "crop_model.pkl"
 CSV_PATH = BASE_DIR / "Crop_recommendation.csv"
 
-# ================================
-# USER DATABASE SETUP
-# ================================
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "local-development-only-change-me"
+)
+
+# Cross-origin session configuration
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=bool(DATABASE_URL)
+)
+
+CORS(
+    app,
+    origins=["https://jamesfrankline.github.io"],
+    supports_credentials=True
+)
+
+
+# =====================================
+# DATABASE CONNECTION
+# =====================================
+
+def get_db_connection():
+
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL)
+
+    return sqlite3.connect(str(DATABASE_PATH))
+
+
 def init_db():
-    conn = sqlite3.connect(str(DATABASE_PATH))
+
+    conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            password_hash TEXT NOT NULL
-        )
-    """)
+    if DATABASE_URL:
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL
+            )
+        """)
+
+    else:
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL
+            )
+        """)
 
     conn.commit()
+    cursor.close()
     conn.close()
 
 
+# =====================================
+# LOAD MACHINE LEARNING MODEL
+# =====================================
 
-# Load trained ML model
 model = joblib.load(MODEL_PATH)
-
-# ================================
-# LOAD TRAINING DATA
-# ================================
 
 training_data = pd.read_csv(CSV_PATH)
 
@@ -58,32 +107,41 @@ feature_columns = [
     "ph",
     "rainfall"
 ]
-# ================================
-# API HEALTH CHECK
-# ================================
+
+
+# =====================================
+# HOME API
+# =====================================
 
 @app.route("/", methods=["GET"])
 def home():
+
     return jsonify({
         "message": "AI Crop Advisory ML API is running!",
         "status": "online"
     }), 200
 
 
+# =====================================
+# HEALTH CHECK
+# =====================================
+
 @app.route("/health", methods=["GET"])
 def health():
+
     return jsonify({
         "status": "healthy",
         "message": "AI Crop Advisory API is working"
     }), 200
 
 
-# ================================
+# =====================================
 # GET AVAILABLE CROPS
-# ================================
+# =====================================
 
 @app.route("/crops", methods=["GET"])
 def get_crops():
+
     crops = sorted(
         training_data["label"].dropna().unique().tolist()
     )
@@ -94,10 +152,14 @@ def get_crops():
     }), 200
 
 
+# =====================================
+# CROP PREDICTION
+# =====================================
+
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
     if not data:
         return jsonify({
@@ -119,19 +181,23 @@ def predict():
     ]
 
     for field in required_fields:
+
         if field not in data:
             return jsonify({
                 "error": f"Missing input: {field}"
             }), 400
 
     try:
+
         N = float(data["N"])
         P = float(data["P"])
         K = float(data["K"])
+
         temperature = float(data["temperature"])
         humidity = float(data["humidity"])
         ph = float(data["ph"])
         rainfall = float(data["rainfall"])
+
         land_area = float(data["landArea"])
         soil_moisture = float(data["soilMoisture"])
 
@@ -139,70 +205,59 @@ def predict():
         soil_type = str(data["soilType"]).strip().lower()
 
     except (TypeError, ValueError):
+
         return jsonify({
             "error": "All inputs must be valid numbers"
         }), 400
 
-    # ================================
+    # =================================
     # INPUT RANGE VALIDATION
-    # ================================
+    # =================================
 
-    if not (0 <= N <= 140):
-        return jsonify({
-            "error": "Nitrogen (N) must be between 0 and 140"
-        }), 400
+    numeric_ranges = {
+        "N": (N, 0, 140),
+        "P": (P, 5, 145),
+        "K": (K, 5, 205),
+        "Temperature": (temperature, 8.83, 43.68),
+        "Humidity": (humidity, 14.26, 99.98),
+        "Soil pH": (ph, 3.50, 9.94),
+        "Rainfall": (rainfall, 20.21, 298.56)
+    }
 
-    if not (5 <= P <= 145):
-        return jsonify({
-            "error": "Phosphorus (P) must be between 5 and 145"
-        }), 400
+    for field, (value, minimum, maximum) in numeric_ranges.items():
 
-    if not (5 <= K <= 205):
-        return jsonify({
-            "error": "Potassium (K) must be between 5 and 205"
-        }), 400
+        if not math.isfinite(value) or not minimum <= value <= maximum:
 
-    if not (8.83 <= temperature <= 43.68):
-        return jsonify({
-            "error": "Temperature must be between 8.83 and 43.68°C"
-        }), 400
-
-    if not (14.26 <= humidity <= 99.98):
-        return jsonify({
-            "error": "Humidity must be between 14.26 and 99.98%"
-        }), 400
-
-    if not (3.50 <= ph <= 9.94):
-        return jsonify({
-            "error": "Soil pH must be between 3.50 and 9.94"
-        }), 400
-
-    if not (20.21 <= rainfall <= 298.56):
-        return jsonify({
-            "error": "Rainfall must be between 20.21 and 298.56 mm"
-        }), 400
-    
-    
-    # ================================
-    # ADDITIONAL FIELD INPUT VALIDATION
-    # ================================
+            return jsonify({
+                "error": f"{field} must be between {minimum} and {maximum}"
+            }), 400
 
     if not math.isfinite(land_area) or land_area <= 0:
+
         return jsonify({
             "error": "Land area must be greater than 0 acres"
         }), 400
 
-    if not math.isfinite(soil_moisture) or not (0 <= soil_moisture <= 100):
+    if (
+        not math.isfinite(soil_moisture)
+        or not 0 <= soil_moisture <= 100
+    ):
+
         return jsonify({
             "error": "Soil moisture must be between 0 and 100%"
         }), 400
 
     allowed_soils = [
-        "alluvial", "black", "red",
-        "loamy", "sandy", "clay"
+        "alluvial",
+        "black",
+        "red",
+        "loamy",
+        "sandy",
+        "clay"
     ]
 
     if soil_type not in allowed_soils:
+
         return jsonify({
             "error": "Invalid soil type"
         }), 400
@@ -218,13 +273,14 @@ def predict():
     ]
 
     if location not in allowed_locations:
+
         return jsonify({
             "error": "Invalid location"
         }), 400
 
-    # ================================
-    # PREPARE MODEL INPUT
-    # ================================
+    # =================================
+    # PREPARE ML MODEL INPUT
+    # =================================
 
     input_data = pd.DataFrame([{
         "N": N,
@@ -238,33 +294,34 @@ def predict():
 
     try:
 
-        # ================================
+        # =================================
         # ML PREDICTION
-        # ================================
+        # =================================
 
         prediction = model.predict(input_data)
 
-        print("Predicted crop:", prediction[0])
-        print("Class probabilities:", model.predict_proba(input_data)[0])
-
         probabilities = model.predict_proba(input_data)
 
-        confidence = max(probabilities[0]) * 100
-        
-        print("Predicted crop:", prediction[0])
-        print("Class probabilities:", dict(zip(model.classes_, probabilities[0])))
+        predicted_crop = str(prediction[0])
 
-        predicted_crop = prediction[0]
+        confidence = float(max(probabilities[0])) * 100
 
+        print("Predicted crop:", predicted_crop)
+        print(
+            "Class probabilities:",
+            dict(zip(model.classes_, probabilities[0]))
+        )
 
-        # ================================
-        # CALCULATE FIELD SUITABILITY
-        # ================================
+        # =================================
+        # FIELD SUITABILITY ESTIMATION
+        # =================================
 
         crop_data = training_data[
             training_data["label"] == predicted_crop
         ]
 
+        if crop_data.empty:
+            raise ValueError("Crop data not found")
 
         input_values = {
             "N": N,
@@ -276,89 +333,74 @@ def predict():
             "rainfall": rainfall
         }
 
-
         scores = []
-
 
         for feature in feature_columns:
 
-            crop_min = crop_data[feature].min()
-            crop_max = crop_data[feature].max()
+            crop_min = float(crop_data[feature].min())
+            crop_max = float(crop_data[feature].max())
 
             value = input_values[feature]
 
+            range_size = crop_max - crop_min
 
-            # Value is inside the crop's dataset range
             if crop_min <= value <= crop_max:
 
                 score = 100
 
+            elif range_size == 0:
 
-            # Value is below the crop's range
+                score = 0
+
             elif value < crop_min:
 
                 distance = crop_min - value
-                range_size = crop_max - crop_min
 
                 score = max(
                     0,
                     100 - (distance / range_size * 100)
                 )
 
-
-            # Value is above the crop's range
             else:
 
                 distance = value - crop_max
-                range_size = crop_max - crop_min
 
                 score = max(
                     0,
                     100 - (distance / range_size * 100)
                 )
 
-
             scores.append(score)
-
 
         suitability = sum(scores) / len(scores)
 
-
-        # ================================
+        # =================================
         # API RESPONSE
-        # ================================
+        # =================================
 
         return jsonify({
 
             "recommended_crop": predicted_crop,
 
-            "confidence": round(
-                confidence,
-                2
-            ),
+            "confidence": round(confidence, 2),
 
-            "suitability": round(
-                suitability,
-                2
-            )
+            "suitability": round(suitability, 2)
 
-        })
-
+        }), 200
 
     except Exception as e:
 
+        print("Prediction error:", str(e))
+
         return jsonify({
-
             "error": "ML prediction failed",
-
             "details": str(e)
-
         }), 500
 
 
-# ================================
+# =====================================
 # IOT SENSOR DATA
-# ================================
+# =====================================
 
 latest_iot_data = {}
 
@@ -371,9 +413,13 @@ def receive_iot_data():
     data = request.get_json(silent=True)
 
     if not data:
-        return jsonify({"error": "No sensor data received"}), 400
+
+        return jsonify({
+            "error": "No sensor data received"
+        }), 400
 
     try:
+
         temperature = float(data["temperature"])
         humidity = float(data["humidity"])
         soil_moisture = float(data["soilMoisture"])
@@ -388,20 +434,23 @@ def receive_iot_data():
         if not all(math.isfinite(value) for value in values):
             raise ValueError("Invalid sensor values")
 
-        if not (-40 <= temperature <= 80):
+        if not -40 <= temperature <= 80:
             raise ValueError("Invalid temperature")
 
-        if not (0 <= humidity <= 100):
+        if not 0 <= humidity <= 100:
             raise ValueError("Invalid humidity")
 
-        if not (0 <= soil_moisture <= 100):
+        if not 0 <= soil_moisture <= 100:
             raise ValueError("Invalid soil moisture")
 
-        if not (0 <= soil_raw <= 4095):
+        if not 0 <= soil_raw <= 4095:
             raise ValueError("Invalid soil raw value")
 
     except (KeyError, TypeError, ValueError):
-        return jsonify({"error": "Invalid sensor data"}), 400
+
+        return jsonify({
+            "error": "Invalid sensor data"
+        }), 400
 
     latest_iot_data = {
         "temperature": temperature,
@@ -422,15 +471,21 @@ def receive_iot_data():
 def get_iot_data():
 
     if not latest_iot_data:
+
         return jsonify({
             "message": "No IoT data available"
         }), 404
 
-    return jsonify(latest_iot_data), 200 
-    return "AI Crop Advisory ML API is running!"
+    return jsonify(latest_iot_data), 200
+
+
+# =====================================
+# USER REGISTRATION
+# =====================================
 
 @app.route("/register", methods=["POST"])
 def register():
+
     data = request.get_json(silent=True) or {}
 
     name = data.get("name", "").strip()
@@ -438,58 +493,131 @@ def register():
     password = data.get("password", "")
 
     if not name or not email or not password:
-        return jsonify({"error": "All fields are required."}), 400
+
+        return jsonify({
+            "error": "All fields are required."
+        }), 400
 
     if len(password) < 8:
-        return jsonify({"error": "Password must be at least 8 characters."}), 400
+
+        return jsonify({
+            "error": "Password must be at least 8 characters."
+        }), 400
+
+    conn = None
+    cursor = None
 
     try:
-        conn = sqlite3.connect("users.db")
+
+        conn = get_db_connection()
         cursor = conn.cursor()
 
+        if DATABASE_URL:
+
+            query = """
+                INSERT INTO users (name, email, password_hash)
+                VALUES (%s, %s, %s)
+            """
+
+        else:
+
+            query = """
+                INSERT INTO users (name, email, password_hash)
+                VALUES (?, ?, ?)
+            """
+
         cursor.execute(
-            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-            (name, email, generate_password_hash(password))
+            query,
+            (
+                name,
+                email,
+                generate_password_hash(password)
+            )
         )
 
         conn.commit()
-        conn.close()
 
-        return jsonify({"message": "Account created successfully!"}), 201
+        return jsonify({
+            "message": "Account created successfully!"
+        }), 201
 
-    except sqlite3.IntegrityError:
-        conn.close()
-        return jsonify({"error": "This email is already registered."}), 409
+    except (sqlite3.IntegrityError, IntegrityError):
 
-    except sqlite3.Error:
-        conn.close()
-        return jsonify({"error": "Database error. Please try again."}), 500
+        if conn:
+            conn.rollback()
 
+        return jsonify({
+            "error": "This email is already registered."
+        }), 409
+
+    except Exception as e:
+
+        if conn:
+            conn.rollback()
+
+        print("Registration database error:", str(e))
+
+        return jsonify({
+            "error": "Database error. Please try again."
+        }), 500
+
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if conn:
+            conn.close()
+
+
+# =====================================
+# USER LOGIN
+# =====================================
 
 @app.route("/login", methods=["POST"])
 def login():
+
     data = request.get_json(silent=True) or {}
 
     email = data.get("email", "").strip().lower()
     password = data.get("password", "")
 
     if not email or not password:
+
         return jsonify({
             "error": "Email and password are required."
         }), 400
 
-    conn = sqlite3.connect("users.db")
+    conn = None
+    cursor = None
 
     try:
+
+        conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT id, name, password_hash FROM users WHERE email = ?",
-            (email,)
-        )
+
+        if DATABASE_URL:
+            query = """
+                SELECT id, name, password_hash
+                FROM users
+                WHERE email = %s
+            """
+        else:
+            query = """
+                SELECT id, name, password_hash
+                FROM users
+                WHERE email = ?
+            """
+
+        cursor.execute(query, (email,))
+
         user = cursor.fetchone()
 
         if user and check_password_hash(user[2], password):
+
+            session.clear()
             session["user_id"] = user[0]
+
             return jsonify({
                 "message": "Login successful!",
                 "name": user[1]
@@ -499,46 +627,126 @@ def login():
             "error": "Invalid email or password."
         }), 401
 
+    except Exception as e:
+
+        print("Login database error:", str(e))
+
+        return jsonify({
+            "error": "Database error. Please try again."
+        }), 500
+
     finally:
-        conn.close()
+
+        if cursor:
+            cursor.close()
+
+        if conn:
+            conn.close()
 
 
-
+# =====================================
+# CHECK USER SESSION
+# =====================================
 
 @app.route("/check-session", methods=["GET"])
 def check_session():
-    if "user_id" not in session:
-        return jsonify({"logged_in": False}), 401
 
-    conn = sqlite3.connect("users.db")
+    if "user_id" not in session:
+
+        return jsonify({
+            "logged_in": False
+        }), 401
+
+    conn = None
+    cursor = None
+
     try:
+
+        conn = get_db_connection()
         cursor = conn.cursor()
+
+        if DATABASE_URL:
+
+            query = """
+                SELECT name
+                FROM users
+                WHERE id = %s
+            """
+
+        else:
+
+            query = """
+                SELECT name
+                FROM users
+                WHERE id = ?
+            """
+
         cursor.execute(
-            "SELECT name FROM users WHERE id = ?",
+            query,
             (session["user_id"],)
         )
+
         user = cursor.fetchone()
 
         if user is None:
+
             session.clear()
-            return jsonify({"logged_in": False}), 401
+
+            return jsonify({
+                "logged_in": False
+            }), 401
 
         return jsonify({
             "logged_in": True,
             "name": user[0]
         }), 200
+
+    except Exception as e:
+
+        print("Session database error:", str(e))
+
+        return jsonify({
+            "error": "Database error. Please try again."
+        }), 500
+
     finally:
-        conn.close()
+
+        if cursor:
+            cursor.close()
+
+        if conn:
+            conn.close()
 
 
+# =====================================
+# USER LOGOUT
+# =====================================
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session.clear()
-    return jsonify({"message": "Logout successful!"}), 200
 
+    session.clear()
+
+    return jsonify({
+        "message": "Logout successful!"
+    }), 200
+
+
+# =====================================
+# INITIALIZE DATABASE
+# =====================================
 
 init_db()
 
+
+# =====================================
+# RUN APPLICATION
+# =====================================
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=False
+    )
