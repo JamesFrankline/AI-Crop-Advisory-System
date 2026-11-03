@@ -2,7 +2,7 @@
 // AI CROP RECOMMENDATION SYSTEM
 // ================================
 
-const IOT_API_URL = "http://127.0.0.1:5000/iot-data";
+const IOT_API_URL = "https://ai-crop-advisory-system.onrender.com/iot-data";
 const API_BASE_URL = "https://ai-crop-advisory-system-0onl.onrender.com";
 
 
